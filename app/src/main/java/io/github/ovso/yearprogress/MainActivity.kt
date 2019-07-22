@@ -13,8 +13,11 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_main.textview_main
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -41,8 +44,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //percentage = (score * 100/ total);
 
     textview_main.text = String.format("time = %s", hereAndNow())
-    val dayOfYear = hereAndNow().dayOfYear
-    println("dayOfYear = $dayOfYear")
+
+    test()
+  }
+
+  private fun test() {
+
+    val format = DateTimeFormatter.ofPattern("HHmm, dd MMM yyyy")
+
+    //Convert String to LocalDateTime
+    val date = "2020-01-01 00:00"
+    val ldt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+    println("LocalDateTime : " + format.format(ldt))
+
+    //Paris, 2016 Apr-Oct = DST, UTC+2, other months UTC+1
+    //UTC+2
+    val startTime = ldt.atZone(ZoneId.of(ZoneId.systemDefault().id))
+
+    val endDate = "2021-12-31 23:59"
+    val ldtEnd = LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+    val endTime = ldtEnd.atZone(ZoneId.of(ZoneId.systemDefault().id))
+    var dayOfYear = endTime.dayOfYear
+    println("end day = $dayOfYear")
   }
 
   fun now(): Instant {
