@@ -1,5 +1,6 @@
 package io.github.ovso.yearprogress
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -61,11 +62,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //UTC+2
     val startTime = ldt.atZone(ZoneId.of(ZoneId.systemDefault().id))
 
-    val endDate = "2021-12-31 23:59"
+    val year = hereAndNow().year
+    textview_main.text = "$year"
+    val endDate = "$year-12-31 23:59"
     val ldtEnd = LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
     val endTime = ldtEnd.atZone(ZoneId.of(ZoneId.systemDefault().id))
-    var dayOfYear = endTime.dayOfYear
-    println("end day = $dayOfYear")
+    val dayOfYear = endTime.dayOfYear
+    val percent = (hereAndNow().dayOfYear.toDouble() / dayOfYear.toDouble() * 100).toInt()
+    textview_main.text = "year progress = $percent%"
+    textview_main.text = "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+
   }
 
   fun now(): Instant {
