@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val dayOfYear = endTime.dayOfYear
     val percent = (hereAndNow().dayOfYear.toDouble() / dayOfYear.toDouble() * 100).toInt()
     textview_main.text = "year progress = $percent%"
-    textview_main.text = "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+    textview_main.text = "▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░"
 
   }
 
