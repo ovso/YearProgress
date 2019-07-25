@@ -17,8 +17,13 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+  // 총 14개
+  val formBefore = "▓"
+  val formAfter = "░"
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -45,14 +50,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   private fun test() {
     val year = hereAndNow().year
-    textview_main.text = "$year"
     val endDate = "$year-12-31 23:59"
     val ldtEnd = LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
     val endTime = ldtEnd.atZone(ZoneId.of(ZoneId.systemDefault().id))
     val dayOfYear = endTime.dayOfYear
     val percent = (hereAndNow().dayOfYear.toDouble() / dayOfYear.toDouble() * 100).toInt()
-    textview_main.text = "e▓▓▓▓▓▓▓▓░░░░░░ $percent%"
-
+    val cntBefore = ((percent * 14) / 100)
+    val cntAfter = 14 - cntBefore;
+    val cntTotal = cntBefore + cntAfter;
+    val formStringBuilder = StringBuilder()
+    for (i in 1..cntBefore) formStringBuilder.append(formBefore)
+    for (i in 1..cntAfter) formStringBuilder.append(formAfter)
+    formStringBuilder.append("  $percent%")
+    textview_main.text = formStringBuilder.toString()
+    // formBefore = (percent * 14) / 100
+    // 100:50 = 14:formBefore
+    // 50 x 14 = 100 x formBefore
+    //
   }
 
   fun now(): Instant {
