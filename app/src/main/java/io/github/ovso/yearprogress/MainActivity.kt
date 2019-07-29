@@ -1,6 +1,10 @@
 package io.github.ovso.yearprogress
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.RelativeSizeSpan
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -17,7 +21,6 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -55,18 +58,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val endTime = ldtEnd.atZone(ZoneId.of(ZoneId.systemDefault().id))
     val dayOfYear = endTime.dayOfYear
     val percent = (hereAndNow().dayOfYear.toDouble() / dayOfYear.toDouble() * 100).toInt()
-    val cntBefore = ((percent * 14) / 100)
-    val cntAfter = 14 - cntBefore;
+    println("percent = $percent")
+    val detailPercent = (hereAndNow().dayOfYear.toDouble() / dayOfYear.toDouble() * 100).round0()
+    println("detailPercent = $detailPercent")
+    val cntBefore = ((percent * 15) / 100)
+    val cntAfter = 15 - cntBefore;
     val cntTotal = cntBefore + cntAfter;
     val formStringBuilder = StringBuilder()
+    val spanBefore = SpannableStringBuilder()
     for (i in 1..cntBefore) formStringBuilder.append(formBefore)
     for (i in 1..cntAfter) formStringBuilder.append(formAfter)
     formStringBuilder.append("  $percent%")
-    textview_main.text = formStringBuilder.toString()
-    // formBefore = (percent * 14) / 100
-    // 100:50 = 14:formBefore
-    // 50 x 14 = 100 x formBefore
-    //
+    val span = SpannableString(formStringBuilder.toString())
+    span.setSpan(RelativeSizeSpan(01.4f), 0, cntBefore, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    textview_main.text = span
+    println("cntBefore = $cntBefore")
+    println("cntAfter = $cntAfter")
+    println("cntTotal = $cntTotal")
   }
 
   fun now(): Instant {
