@@ -1,0 +1,7 @@
+<resources>
+  <string-array name="fragment_titles">
+    <item>YEAR</item>
+    <item>MONTH</item>
+    <item>DAY</item>
+  </string-array>
+</resources>

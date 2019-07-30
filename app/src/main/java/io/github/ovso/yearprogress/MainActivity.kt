@@ -9,13 +9,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.content_main.textview_main
+import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
@@ -24,21 +21,14 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-  // 총 14개
   val formBefore = "▓"
   val formAfter = "░"
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    val toolbar: Toolbar = findViewById(R.id.toolbar)
     setSupportActionBar(toolbar)
 
-    val fab: FloatingActionButton = findViewById(R.id.fab)
-    fab.setOnClickListener { view ->
-      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-        .setAction("Action", null).show()
-    }
     val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
     val navView: NavigationView = findViewById(R.id.nav_view)
     val toggle = ActionBarDrawerToggle(
@@ -48,7 +38,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     toggle.syncState()
     navView.setNavigationItemSelectedListener(this)
 
-    test()
+    replaceFragment()
+    //test()
+  }
+
+  private fun replaceFragment() {
+    supportFragmentManager.beginTransaction()
+      .replace(
+        R.id.framelayout_main_replace_container,
+        ProgressFragment.newInstance(0),
+        ProgressFragment::class.java.simpleName
+      ).commitNowAllowingStateLoss()
   }
 
   private fun test() {
@@ -71,7 +71,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     formStringBuilder.append("  $percent%")
     val span = SpannableString(formStringBuilder.toString())
     span.setSpan(RelativeSizeSpan(01.4f), 0, cntBefore, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-    textview_main.text = span
     println("cntBefore = $cntBefore")
     println("cntAfter = $cntAfter")
     println("cntTotal = $cntTotal")
