@@ -14,7 +14,7 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
 class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
-  
+
   val progressObField = ObservableField<SpannableString>()
   private val formBefore = "▓"
   private val formAfter = "░"
@@ -22,10 +22,22 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
   fun getTitle(): String = context.resources.getStringArray(R.array.fragment_titles)[position]
 
   init {
-    test()
+    when (position) {
+      0 -> setupYear()
+      1 -> setupMonth()
+      2 -> setupDay()
+    }
   }
 
-  private fun test() {
+  private fun setupDay() {
+    println("setupDay")
+  }
+
+  private fun setupMonth() {
+    println("setupMonth")
+  }
+
+  private fun setupYear() {
     val year = hereAndNow().year
     val endDate = "$year-12-31 23:59"
     val ldtEnd = LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
