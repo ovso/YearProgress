@@ -43,7 +43,7 @@ class ProgressFragment : Fragment() {
   private fun provideViewModel() =
     ViewModelProviders.of(this, object : ViewModelProvider.Factory {
       override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        ProgressViewModel(context!!, 0) as T
+        ProgressViewModel(context!!, arguments?.getInt("position")!!) as T
     }).get(ProgressViewModel::class.java)
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -10,9 +10,14 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
+import io.github.ovso.yearprogress.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.app_bar_main.toolbar
+import kotlinx.android.synthetic.main.content_main.bottomNavigationView
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
@@ -21,12 +26,15 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-  val formBefore = "▓"
-  val formAfter = "░"
+  private lateinit var viewModel: MainViewModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+    val contentView =
+      DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+    viewModel = provideViewModel()
+    contentView.viewModel = viewModel
     setSupportActionBar(toolbar)
 
     val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -38,50 +46,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     toggle.syncState()
     navView.setNavigationItemSelectedListener(this)
 
-    replaceFragment()
-    //test()
+    setupBottonNavView()
   }
 
-  private fun replaceFragment() {
+  private fun provideViewModel() = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
+  private fun setupBottonNavView() {
+    bottomNavigationView.setOnNavigationItemSelectedListener {
+      println("bottomNavigationView")
+      when (it.itemId) {
+        R.id.bottom_nav_year -> viewModel.navSelectLiveData.value = 0
+        R.id.bottom_nav_month -> viewModel.navSelectLiveData.value = 1
+        R.id.bottom_nav_day -> viewModel.navSelectLiveData.value = 2
+      }
+      true
+    }
+
+    viewModel.navSelectLiveData.observe(this, Observer {
+      println("navSelectLiveData obseve $it")
+      replaceFragment(it)
+    })
+    viewModel.navSelectLiveData.postValue(0)
+
+  }
+
+  private fun replaceFragment(position: Int) {
     supportFragmentManager.beginTransaction()
       .replace(
         R.id.framelayout_main_replace_container,
-        ProgressFragment.newInstance(0),
+        ProgressFragment.newInstance(position),
         ProgressFragment::class.java.simpleName
       ).commitNowAllowingStateLoss()
-  }
-
-  private fun test() {
-    val year = hereAndNow().year
-    val endDate = "$year-12-31 23:59"
-    val ldtEnd = LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-    val endTime = ldtEnd.atZone(ZoneId.of(ZoneId.systemDefault().id))
-    val dayOfYear = endTime.dayOfYear
-    val percent = (hereAndNow().dayOfYear.toDouble() / dayOfYear.toDouble() * 100).toInt()
-    println("percent = $percent")
-    val detailPercent = (hereAndNow().dayOfYear.toDouble() / dayOfYear.toDouble() * 100).round0()
-    println("detailPercent = $detailPercent")
-    val cntBefore = ((percent * 15) / 100)
-    val cntAfter = 15 - cntBefore;
-    val cntTotal = cntBefore + cntAfter;
-    val formStringBuilder = StringBuilder()
-    val spanBefore = SpannableStringBuilder()
-    for (i in 1..cntBefore) formStringBuilder.append(formBefore)
-    for (i in 1..cntAfter) formStringBuilder.append(formAfter)
-    formStringBuilder.append("  $percent%")
-    val span = SpannableString(formStringBuilder.toString())
-    span.setSpan(RelativeSizeSpan(01.4f), 0, cntBefore, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-    println("cntBefore = $cntBefore")
-    println("cntAfter = $cntAfter")
-    println("cntTotal = $cntTotal")
-  }
-
-  fun now(): Instant {
-    return Instant.now()
-  }
-
-  fun hereAndNow(): ZonedDateTime {
-    return ZonedDateTime.ofInstant(now(), ZoneId.systemDefault())
   }
 
   override fun onBackPressed() {
