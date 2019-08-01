@@ -2,7 +2,6 @@ package io.github.ovso.yearprogress
 
 import android.content.Context
 import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.RelativeSizeSpan
 import androidx.databinding.ObservableField
@@ -13,11 +12,13 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
+const val FORM_BEFORE = "▓"
+const val FORM_AFTER = "░"
+const val FORM_MAX_COUNT = 15
+
 class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
   val progressObField = ObservableField<SpannableString>()
-  private val formBefore = "▓"
-  private val formAfter = "░"
 
   fun getTitle(): String = context.resources.getStringArray(R.array.fragment_titles)[position]
 
@@ -31,10 +32,33 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
   private fun setupDay() {
     println("setupDay")
+    val percent = (hereAndNow().toLocalTime().hour.toDouble() / 24.toDouble() * 100).toInt()
+    println("setupDay percent = $percent")
+    val cntBefore = (percent * FORM_MAX_COUNT) / 100
+    val cntAfter = FORM_MAX_COUNT - cntBefore
+    val formStringBuilder = StringBuilder()
+    for (i in 1..cntBefore) formStringBuilder.append(FORM_BEFORE)
+    for (i in 1..cntAfter) formStringBuilder.append(FORM_AFTER)
+    formStringBuilder.append("  $percent%")
+    val span = SpannableString(formStringBuilder.toString())
+    span.setSpan(RelativeSizeSpan(01.4f), 0, cntBefore, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    progressObField.set(span)
   }
 
   private fun setupMonth() {
     println("setupMonth")
+    val nowDay = hereAndNow().dayOfMonth
+    val lastDay = hereAndNow().month.maxLength()
+    val percent = (nowDay.toDouble() / lastDay.toDouble() * 100).toInt()
+    val cntBefore = (percent * FORM_MAX_COUNT) / 100
+    val cntAfter = FORM_MAX_COUNT - cntBefore
+    val formStringBuilder = StringBuilder()
+    for (i in 1..cntBefore) formStringBuilder.append(FORM_BEFORE)
+    for (i in 1..cntAfter) formStringBuilder.append(FORM_AFTER)
+    formStringBuilder.append("  $percent%")
+    val span = SpannableString(formStringBuilder.toString())
+    span.setSpan(RelativeSizeSpan(01.4f), 0, cntBefore, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    progressObField.set(span)
   }
 
   private fun setupYear() {
@@ -42,18 +66,16 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
     val endDate = "$year-12-31 23:59"
     val ldtEnd = LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
     val endTime = ldtEnd.atZone(ZoneId.of(ZoneId.systemDefault().id))
-    val dayOfYear = endTime.dayOfYear
-    val percent = (hereAndNow().dayOfYear.toDouble() / dayOfYear.toDouble() * 100).toInt()
+    val nowDayOfYear = hereAndNow().dayOfYear
+    val endDayOfYear = endTime.dayOfYear
+    val percent = (nowDayOfYear.toDouble() / endDayOfYear.toDouble() * 100).toInt()
     println("percent = $percent")
-    val detailPercent = (hereAndNow().dayOfYear.toDouble() / dayOfYear.toDouble() * 100).round0()
-    println("detailPercent = $detailPercent")
-    val cntBefore = ((percent * 15) / 100)
-    val cntAfter = 15 - cntBefore;
+    val cntBefore = ((percent * FORM_MAX_COUNT) / 100)
+    val cntAfter = FORM_MAX_COUNT - cntBefore;
     val cntTotal = cntBefore + cntAfter;
     val formStringBuilder = StringBuilder()
-    val spanBefore = SpannableStringBuilder()
-    for (i in 1..cntBefore) formStringBuilder.append(formBefore)
-    for (i in 1..cntAfter) formStringBuilder.append(formAfter)
+    for (i in 1..cntBefore) formStringBuilder.append(FORM_BEFORE)
+    for (i in 1..cntAfter) formStringBuilder.append(FORM_AFTER)
     formStringBuilder.append("  $percent%")
     val span = SpannableString(formStringBuilder.toString())
     span.setSpan(RelativeSizeSpan(01.4f), 0, cntBefore, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
