@@ -12,6 +12,8 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.Timer
+import java.util.TimerTask
 
 const val FORM_BEFORE = "▓"
 const val FORM_AFTER = "░"
@@ -20,11 +22,10 @@ const val FORM_MAX_COUNT = 15
 class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
   val progressObField = ObservableField<SpannableString>()
-
+  val progressBarObField = ObservableField<Int>()
   fun getTitle(): String = context.resources.getStringArray(R.array.fragment_titles)[position]
 
   init {
-    val paint = Paint()
     when (position) {
       0 -> setupPercent(getYearPer())
       1 -> setupPercent(getMonthPer())
@@ -42,6 +43,7 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
     val span = SpannableString(formStringBuilder.toString())
     span.setSpan(RelativeSizeSpan(1f), 0, cntBefore, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     progressObField.set(span)
+    progressBarObField.set(percent)
   }
 
   private fun getDayPer() =

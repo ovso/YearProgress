@@ -16,6 +16,21 @@
       android:layout_height="match_parent"
       tools:background="@android:color/black"
       >
+    <ProgressBar
+        android:id="@+id/progressbar_progress"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:max="100"
+        android:progress="@{viewModel.progressBarObField.get()}"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        style="@style/YearProgressBarHorizontal"
+        />
+
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
@@ -30,15 +45,15 @@
           android:id="@+id/textview_progress"
           android:layout_width="wrap_content"
           android:layout_height="?android:attr/actionBarSize"
-          android:layout_marginStart="20dp"
           android:ellipsize="end"
           android:gravity="center_vertical"
           android:maxLines="1"
           android:scrollHorizontally="true"
           android:text="@{viewModel.progressObField.get()}"
           android:textColor="@android:color/white"
-          android:textSize="22sp"
+          android:textSize="18sp"
           android:textStyle="italic"
+          android:visibility="invisible"
           tools:text="▓▓░░░░░░░░░░░ 10%"
           />
 
@@ -51,7 +66,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="@{viewModel.getTitle()}"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="40sp"
         android:textStyle="italic|bold"
         app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
@@ -60,5 +75,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="YEAR\nPROGRESS"
         />
+
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
