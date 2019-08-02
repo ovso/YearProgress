@@ -20,8 +20,6 @@
   <style name="YearProgressBarHorizontal" parent="android:Widget.ProgressBar.Horizontal">
     <item name="android:progressBackgroundTint">@android:color/white</item>
     <item name="android:progressTint">@android:color/darker_gray</item>
-    <item name="android:minHeight">10dp</item>
-    <item name="android:maxHeight">20dp</item>
   </style>
 
 </resources>

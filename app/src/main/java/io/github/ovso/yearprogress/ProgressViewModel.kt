@@ -1,29 +1,25 @@
 package io.github.ovso.yearprogress
 
 import android.content.Context
-import android.graphics.Paint
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.RelativeSizeSpan
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.Timer
-import java.util.TimerTask
-
-const val FORM_BEFORE = "▓"
-const val FORM_AFTER = "░"
-const val FORM_MAX_COUNT = 15
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.atomic.AtomicInteger
 
 class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
-  val progressObField = ObservableField<SpannableString>()
-  val progressBarObField = ObservableField<Int>()
+  val progressObField = ObservableField<Int>()
   val percentObField = ObservableField<String>()
+  val atomicInt = AtomicInteger(-1)
   fun getTitle(): String = context.resources.getStringArray(R.array.fragment_titles)[position]
 
   init {
@@ -34,18 +30,22 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
     }
   }
 
+  private var subscribe: Disposable? = null
   private fun setupPercent(percent: Int) {
-    val cntBefore = (percent * FORM_MAX_COUNT) / 100
-    val cntAfter = FORM_MAX_COUNT - cntBefore
-    val formStringBuilder = StringBuilder()
-    for (i in 1..cntBefore) formStringBuilder.append(FORM_BEFORE)
-    for (i in 1..cntAfter) formStringBuilder.append(FORM_AFTER)
-    formStringBuilder.append("  $percent%")
-    val span = SpannableString(formStringBuilder.toString())
-    span.setSpan(RelativeSizeSpan(1f), 0, cntBefore, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-    progressObField.set(span)
-    progressBarObField.set(percent)
-    percentObField.set("$percent%")
+    println("percent = $percent")
+    progressObField.set(atomicInt.getAndIncrement())
+    percentObField.set("${atomicInt.getAndIncrement()}%")
+    subscribe = Observable.interval(25, MILLISECONDS)
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe {
+        if (atomicInt.get() > percent) {
+          subscribe?.dispose()
+        } else {
+          progressObField.set(atomicInt.getAndIncrement())
+          percentObField.set("${atomicInt.getAndIncrement()}%")
+        }
+      }
   }
 
   private fun getDayPer() =
@@ -75,4 +75,8 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
     return ZonedDateTime.ofInstant(now(), ZoneId.systemDefault())
   }
 
+  override fun onCleared() {
+    super.onCleared()
+    subscribe?.dispose()
+  }
 }
