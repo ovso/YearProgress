@@ -23,6 +23,7 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
   val progressObField = ObservableField<SpannableString>()
   val progressBarObField = ObservableField<Int>()
+  val percentObField = ObservableField<String>()
   fun getTitle(): String = context.resources.getStringArray(R.array.fragment_titles)[position]
 
   init {
@@ -44,6 +45,7 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
     span.setSpan(RelativeSizeSpan(1f), 0, cntBefore, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     progressObField.set(span)
     progressBarObField.set(percent)
+    percentObField.set("$percent%")
   }
 
   private fun getDayPer() =

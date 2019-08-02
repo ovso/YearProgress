@@ -62,18 +62,28 @@
         android:id="@+id/textview_progress_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="@{viewModel.getTitle()}"
         android:textColor="@android:color/black"
         android:textSize="40sp"
         android:textStyle="italic|bold"
-        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="YEAR\nPROGRESS"
+        />
+    <TextView
+        android:id="@+id/textview_progress_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@{viewModel.percentObField.get()}"
+        android:textColor="@android:color/black"
+        android:textSize="60sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="@+id/progressbar_progress"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="59%"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
