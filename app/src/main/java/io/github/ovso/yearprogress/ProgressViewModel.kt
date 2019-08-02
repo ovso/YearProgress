@@ -1,6 +1,8 @@
 package io.github.ovso.yearprogress
 
 import android.content.Context
+import android.graphics.Color
+import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
@@ -17,11 +19,13 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.atomic.AtomicInteger
 
 const val PERIOD_PROGRESS = 25L
+val PERCENT_COLORS = intArrayOf(0x9e9e9e, 0x757575, 0x616161, 0x424242, 0x000000)
 
 class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
-  private val progressObField = ObservableField<Int>()
-  private val percentObField = ObservableField<String>()
+  val progressObField = ObservableField<Int>()
+  val percentObField = ObservableField<String>()
+  val percentColorObField = ObservableField<Int>()
   private val atomicInt = AtomicInteger(-1)
   fun getTitle(): String = context.resources.getStringArray(R.array.fragment_titles)[position]
 
@@ -37,8 +41,8 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
   private fun setupPercent(percent: Int) {
     Timber.d("setupPercent($percent)")
-    progressObField.set(atomicInt.getAndIncrement())
-    percentObField.set("${atomicInt.getAndIncrement()}%")
+    progressObField.set(atomicInt.get())
+    percentObField.set("${atomicInt.get()}%")
     intervalDisposable = Observable.interval(PERIOD_PROGRESS, MILLISECONDS)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
@@ -48,6 +52,9 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
         } else {
           progressObField.set(atomicInt.getAndIncrement())
           percentObField.set("${atomicInt.getAndIncrement()}%")
+          val color =
+            Color.parseColor(context.resources.getStringArray(R.array.percent_colors2)[atomicInt.get() / 10])
+          percentColorObField.set(color)
         }
       }
   }
