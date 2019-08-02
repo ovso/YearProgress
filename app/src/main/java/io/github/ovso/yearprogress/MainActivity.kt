@@ -23,6 +23,7 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -53,7 +54,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   private fun setupBottonNavView() {
     bottomNavigationView.setOnNavigationItemSelectedListener {
-      println("bottomNavigationView")
       when (it.itemId) {
         R.id.bottom_nav_year -> viewModel.navSelectLiveData.value = 0
         R.id.bottom_nav_month -> viewModel.navSelectLiveData.value = 1
@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     viewModel.navSelectLiveData.observe(this, Observer {
-      println("navSelectLiveData obseve $it")
       replaceFragment(it)
     })
     viewModel.navSelectLiveData.postValue(0)

@@ -12,14 +12,17 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import timber.log.Timber
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.atomic.AtomicInteger
 
+const val PERIOD_PROGRESS = 25L
+
 class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
-  val progressObField = ObservableField<Int>()
-  val percentObField = ObservableField<String>()
-  val atomicInt = AtomicInteger(-1)
+  private val progressObField = ObservableField<Int>()
+  private val percentObField = ObservableField<String>()
+  private val atomicInt = AtomicInteger(-1)
   fun getTitle(): String = context.resources.getStringArray(R.array.fragment_titles)[position]
 
   init {
@@ -30,17 +33,18 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
     }
   }
 
-  private var subscribe: Disposable? = null
+  private var intervalDisposable: Disposable? = null
+
   private fun setupPercent(percent: Int) {
-    println("percent = $percent")
+    Timber.d("setupPercent($percent)")
     progressObField.set(atomicInt.getAndIncrement())
     percentObField.set("${atomicInt.getAndIncrement()}%")
-    subscribe = Observable.interval(25, MILLISECONDS)
+    intervalDisposable = Observable.interval(PERIOD_PROGRESS, MILLISECONDS)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe {
         if (atomicInt.get() > percent) {
-          subscribe?.dispose()
+          intervalDisposable?.dispose()
         } else {
           progressObField.set(atomicInt.getAndIncrement())
           percentObField.set("${atomicInt.getAndIncrement()}%")
@@ -77,6 +81,6 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
   override fun onCleared() {
     super.onCleared()
-    subscribe?.dispose()
+    intervalDisposable?.dispose()
   }
 }
