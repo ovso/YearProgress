@@ -44,7 +44,8 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
     progressObField.set(span)
   }
 
-  private fun getDayPer() = (hereAndNow().toLocalTime().hour.toDouble() / 24.toDouble() * 100).toInt()
+  private fun getDayPer() =
+    (hereAndNow().toLocalTime().hour.toDouble() / 24.toDouble() * 100).toInt()
 
   private fun getMonthPer(): Int {
     val nowDay = hereAndNow().dayOfMonth
