@@ -16,4 +16,5 @@
   <string name="bottom_nav_year">YEAR</string>
   <string name="bottom_nav_month">MONTH</string>
   <string name="bottom_nav_day">DAY</string>
+  <string name="main_title">Progress</string>
 </resources>

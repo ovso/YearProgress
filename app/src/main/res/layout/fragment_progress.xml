@@ -15,11 +15,10 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
-    <ProgressBar
+    <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressbar_progress"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:max="100"
         android:progress="@{viewModel.progressObField.get()}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
