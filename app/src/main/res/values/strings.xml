@@ -17,4 +17,6 @@
   <string name="bottom_nav_month">MONTH</string>
   <string name="bottom_nav_day">DAY</string>
   <string name="main_title">Progress</string>
+  <string name="opensource_license">Opensource license</string>
+  <string name="main_nav_review">Review</string>
 </resources>

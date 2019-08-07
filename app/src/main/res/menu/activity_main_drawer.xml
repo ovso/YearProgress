@@ -8,11 +8,15 @@
       <item
           android:id="@+id/nav_opensource"
           android:icon="@drawable/ic_opensource"
-          android:title="@string/menu_share"/>
+          android:title="@string/opensource_license"/>
       <item
           android:id="@+id/nav_review"
           android:icon="@drawable/ic_rate_review"
-          android:title="@string/menu_send"/>
+          android:title="@string/main_nav_review"/>
+      <item
+          android:id="@+id/nav_share"
+          android:icon="@drawable/ic_menu_share"
+          android:title="@string/menu_share"/>
     </menu>
   </item>
 

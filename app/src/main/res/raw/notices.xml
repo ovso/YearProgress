@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<notices>
+  <notice>
+    <name>RxJava2</name>
+    <url>https://github.com/ReactiveX/RxJava</url>
+    <copyright>Copyright (c) 2016-present RxJava Contributors.</copyright>
+    <license>Apache Software License 2.0</license>
+  </notice>
+  <notice>
+    <name>RxAndroid</name>
+    <url>https://github.com/ReactiveX/RxAndroid</url>
+    <copyright>Copyright 2015 The RxAndroid authors</copyright>
+    <license>Apache Software License 2.0</license>
+  </notice>
+  <notice>
+    <name>RxKotlin</name>
+    <url>https://github.com/ReactiveX/RxKotlin</url>
+    <copyright>Copyright 2012 Netflix, Inc.</copyright>
+    <license>Apache Software License 2.0</license>
+  </notice>
+  <notice>
+    <name>Retrofit</name>
+    <url>https://github.com/square/retrofit</url>
+    <copyright>Copyright 2013 Square Inc.</copyright>
+    <license>Apache Software License 2.0</license>
+  </notice>
+  <notice>
+    <name>Timber</name>
+    <url>https://github.com/JakeWharton/timber</url>
+    <copyright>Copyright 2013 Jake Wharton</copyright>
+    <license>Apache Software License 2.0</license>
+  </notice>
+  <notice>
+    <name>Glide</name>
+    <url>https://github.com/bumptech/glide</url>
+    <copyright>Copyright 2014 Google, Inc. All rights reserved.</copyright>
+    <license>Apache Software License 2.0</license>
+  </notice>
+  <notice>
+    <name>EasyDeviceInfo</name>
+    <url>https://github.com/nisrulz/easydeviceinfo</url>
+    <copyright>Copyright 2016 Nishant Srivastava</copyright>
+    <license>Apache Software License 2.0</license>
+  </notice>
+  <notice>
+    <name>EasyPrefs</name>
+    <url>https://github.com/Pixplicity/EasyPrefs</url>
+    <copyright>Copyright 2014 Pixplicity (http://pixplicity.com)</copyright>
+    <license>Apache Software License 2.0</license>
+  </notice>
+
+</notices>
