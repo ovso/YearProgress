@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import de.psdev.licensesdialog.LicensesDialog
 import io.github.ovso.yearprogress.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_main.drawer_layout
 import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import kotlinx.android.synthetic.main.content_main.bottomNavigationView
 import timber.log.Timber
@@ -40,11 +41,14 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun setupDrawer() {
-    val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
     val toggle = ActionBarDrawerToggle(
-      this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+      this,
+      drawer_layout,
+      toolbar,
+      R.string.navigation_drawer_open,
+      R.string.navigation_drawer_close
     )
-    drawerLayout.addDrawerListener(toggle)
+    drawer_layout.addDrawerListener(toggle)
     toggle.syncState()
   }
 
@@ -85,13 +89,21 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-    item?.let {
-      when (item.itemId) {
-        R.id.nav_opensource -> showLicenseDialog()
-        R.id.nav_review -> navigateToReview()
-        R.id.nav_share -> navigateToShare()
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      R.id.nav_opensource -> {
+        showLicenseDialog()
+        return true
       }
+      R.id.nav_review -> {
+        navigateToReview()
+        return true
+      }
+      R.id.nav_share -> {
+        navigateToShare()
+        return true
+      }
+      else -> super.onOptionsItemSelected(item)
     }
     return super.onOptionsItemSelected(item)
   }
