@@ -4,17 +4,16 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import de.psdev.licensesdialog.LicensesDialog
 import io.github.ovso.yearprogress.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.drawer_layout
+import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import kotlinx.android.synthetic.main.content_main.bottomNavigationView
 import timber.log.Timber
@@ -33,6 +32,20 @@ class MainActivity : AppCompatActivity() {
     setupActionBar()
     setupDrawer()
     setupBottonNavView()
+    setupNavigationView()
+  }
+
+  private fun setupNavigationView() {
+    nav_view.setNavigationItemSelectedListener {
+      drawer_layout.closeDrawer(GravityCompat.START)
+      when (it.itemId) {
+        R.id.nav_opensource -> showLicenseDialog()
+        R.id.nav_review -> navigateToReview()
+        R.id.nav_share -> navigateToShare()
+      }
+
+      true
+    }
   }
 
   private fun setupActionBar() {
@@ -81,31 +94,11 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onBackPressed() {
-    val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-      drawerLayout.closeDrawer(GravityCompat.START)
+    if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+      drawer_layout.closeDrawer(GravityCompat.START)
     } else {
       super.onBackPressed()
     }
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    when (item.itemId) {
-      R.id.nav_opensource -> {
-        showLicenseDialog()
-        return true
-      }
-      R.id.nav_review -> {
-        navigateToReview()
-        return true
-      }
-      R.id.nav_share -> {
-        navigateToShare()
-        return true
-      }
-      else -> super.onOptionsItemSelected(item)
-    }
-    return super.onOptionsItemSelected(item)
   }
 
   private fun navigateToShare() {
@@ -129,6 +122,7 @@ class MainActivity : AppCompatActivity() {
     } catch (e: ActivityNotFoundException) {
       Timber.e(e)
     }
+
   }
 
   private fun showLicenseDialog() {
