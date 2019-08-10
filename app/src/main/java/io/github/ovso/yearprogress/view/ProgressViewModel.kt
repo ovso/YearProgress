@@ -1,10 +1,10 @@
-package io.github.ovso.yearprogress
+package io.github.ovso.yearprogress.view
 
 import android.content.Context
 import android.graphics.Color
-import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
+import io.github.ovso.yearprogress.R.array
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -27,7 +27,7 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
   val percentObField = ObservableField<String>()
   val percentColorObField = ObservableField<Int>()
   private val atomicInt = AtomicInteger(-1)
-  fun getTitle(): String = context.resources.getStringArray(R.array.fragment_titles)[position]
+  fun getTitle(): String = context.resources.getStringArray(array.fragment_titles)[position]
 
   init {
     when (position) {
@@ -53,7 +53,7 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
           progressObField.set(atomicInt.getAndIncrement())
           percentObField.set("${atomicInt.getAndIncrement()}%")
           val color =
-            Color.parseColor(context.resources.getStringArray(R.array.percent_colors2)[atomicInt.get() / 10])
+            Color.parseColor(context.resources.getStringArray(array.percent_colors2)[atomicInt.get() / 10])
           percentColorObField.set(color)
         }
       }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/actionBarSize"
+    android:orientation="vertical"
+    >
+  <androidx.core.widget.ContentLoadingProgressBar
+      android:id="@+id/progressbar_widget_year"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:max="100"
+      tools:progress="50"
+      style="@style/YearProgressBarHorizontal"
+      />
+</LinearLayout>

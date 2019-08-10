@@ -3,7 +3,7 @@
   <data>
     <variable
         name="viewModel"
-        type="io.github.ovso.yearprogress.MainViewModel"
+        type="io.github.ovso.yearprogress.view.MainViewModel"
         />
   </data>
   <androidx.drawerlayout.widget.DrawerLayout

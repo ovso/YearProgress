@@ -1,4 +1,4 @@
-package io.github.ovso.yearprogress
+package io.github.ovso.yearprogress.extension
 
 fun Double.round0(): Double = "%.0f".format(this).toDouble()
 

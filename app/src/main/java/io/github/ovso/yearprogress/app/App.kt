@@ -1,7 +1,8 @@
-package io.github.ovso.yearprogress
+package io.github.ovso.yearprogress.app
 
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
+import io.github.ovso.yearprogress.BuildConfig
 import timber.log.Timber.DebugTree
 import timber.log.Timber
 

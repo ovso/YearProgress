@@ -1,4 +1,4 @@
-package io.github.ovso.yearprogress
+package io.github.ovso.yearprogress.view
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -11,6 +11,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import de.psdev.licensesdialog.LicensesDialog
+import io.github.ovso.yearprogress.R.id
+import io.github.ovso.yearprogress.R.layout
+import io.github.ovso.yearprogress.R.raw
+import io.github.ovso.yearprogress.R.string
 import io.github.ovso.yearprogress.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.drawer_layout
 import kotlinx.android.synthetic.main.activity_main.nav_view
@@ -24,9 +28,11 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(layout.activity_main)
     val contentView =
-      DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+      DataBindingUtil.setContentView<ActivityMainBinding>(this,
+        layout.activity_main
+      )
     viewModel = provideViewModel()
     contentView.viewModel = viewModel
     setupActionBar()
@@ -39,9 +45,9 @@ class MainActivity : AppCompatActivity() {
     nav_view.setNavigationItemSelectedListener {
       drawer_layout.closeDrawer(GravityCompat.START)
       when (it.itemId) {
-        R.id.nav_opensource -> showLicenseDialog()
-        R.id.nav_review -> navigateToReview()
-        R.id.nav_share -> navigateToShare()
+        id.nav_opensource -> showLicenseDialog()
+        id.nav_review -> navigateToReview()
+        id.nav_share -> navigateToShare()
       }
 
       true
@@ -50,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun setupActionBar() {
     setSupportActionBar(toolbar)
-    title = getString(R.string.main_title)
+    title = getString(string.main_title)
   }
 
   private fun setupDrawer() {
@@ -58,8 +64,8 @@ class MainActivity : AppCompatActivity() {
       this,
       drawer_layout,
       toolbar,
-      R.string.navigation_drawer_open,
-      R.string.navigation_drawer_close
+      string.navigation_drawer_open,
+      string.navigation_drawer_close
     )
     drawer_layout.addDrawerListener(toggle)
     toggle.syncState()
@@ -70,9 +76,9 @@ class MainActivity : AppCompatActivity() {
   private fun setupBottonNavView() {
     bottomNavigationView.setOnNavigationItemSelectedListener {
       when (it.itemId) {
-        R.id.bottom_nav_year -> viewModel.navSelectLiveData.value = 0
-        R.id.bottom_nav_month -> viewModel.navSelectLiveData.value = 1
-        R.id.bottom_nav_day -> viewModel.navSelectLiveData.value = 2
+        id.bottom_nav_year -> viewModel.navSelectLiveData.value = 0
+        id.bottom_nav_month -> viewModel.navSelectLiveData.value = 1
+        id.bottom_nav_day -> viewModel.navSelectLiveData.value = 2
       }
       true
     }
@@ -87,7 +93,7 @@ class MainActivity : AppCompatActivity() {
   private fun replaceFragment(position: Int) {
     supportFragmentManager.beginTransaction()
       .replace(
-        R.id.framelayout_main_replace_container,
+        id.framelayout_main_replace_container,
         ProgressFragment.newInstance(position),
         ProgressFragment::class.java.simpleName
       ).commitNowAllowingStateLoss()
@@ -127,7 +133,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun showLicenseDialog() {
     LicensesDialog.Builder(this)
-      .setNotices(R.raw.notices)
+      .setNotices(raw.notices)
       .build()
       .show()
   }

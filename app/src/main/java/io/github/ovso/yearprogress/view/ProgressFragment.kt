@@ -1,4 +1,4 @@
-package io.github.ovso.yearprogress
+package io.github.ovso.yearprogress.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import io.github.ovso.yearprogress.R.layout
 import io.github.ovso.yearprogress.databinding.FragmentProgressBinding
 
 class ProgressFragment : Fragment() {
@@ -34,7 +35,7 @@ class ProgressFragment : Fragment() {
   private fun getDataBindingInflate(inflater: LayoutInflater, container: ViewGroup?) =
     DataBindingUtil.inflate<FragmentProgressBinding>(
       inflater,
-      R.layout.fragment_progress,
+      layout.fragment_progress,
       container,
       false
     )
@@ -43,7 +44,10 @@ class ProgressFragment : Fragment() {
   private fun provideViewModel() =
     ViewModelProviders.of(this, object : ViewModelProvider.Factory {
       override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        ProgressViewModel(context!!, arguments?.getInt("position")!!) as T
+        ProgressViewModel(
+          context!!,
+          arguments?.getInt("position")!!
+        ) as T
     }).get(ProgressViewModel::class.java)
 
 }

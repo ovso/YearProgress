@@ -1,4 +1,4 @@
-package io.github.ovso.yearprogress
+package io.github.ovso.yearprogress.view
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

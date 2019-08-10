@@ -3,7 +3,7 @@
   <data>
     <variable
         name="viewModel"
-        type="io.github.ovso.yearprogress.MainViewModel"
+        type="io.github.ovso.yearprogress.view.MainViewModel"
         />
   </data>
   <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -12,7 +12,7 @@
       xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      tools:context=".MainActivity"
+      tools:context=".view.MainActivity"
       >
 
     <com.google.android.material.appbar.AppBarLayout

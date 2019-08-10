@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ProgressFragment"
+    tools:context=".view.ProgressFragment"
     >
   <data>
     <variable
         name="viewModel"
-        type="io.github.ovso.yearprogress.ProgressViewModel"
+        type="io.github.ovso.yearprogress.view.ProgressViewModel"
         />
   </data>
   <androidx.constraintlayout.widget.ConstraintLayout
