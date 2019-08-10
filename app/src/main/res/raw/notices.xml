@@ -19,27 +19,9 @@
     <license>Apache Software License 2.0</license>
   </notice>
   <notice>
-    <name>Retrofit</name>
-    <url>https://github.com/square/retrofit</url>
-    <copyright>Copyright 2013 Square Inc.</copyright>
-    <license>Apache Software License 2.0</license>
-  </notice>
-  <notice>
     <name>Timber</name>
     <url>https://github.com/JakeWharton/timber</url>
     <copyright>Copyright 2013 Jake Wharton</copyright>
-    <license>Apache Software License 2.0</license>
-  </notice>
-  <notice>
-    <name>Glide</name>
-    <url>https://github.com/bumptech/glide</url>
-    <copyright>Copyright 2014 Google, Inc. All rights reserved.</copyright>
-    <license>Apache Software License 2.0</license>
-  </notice>
-  <notice>
-    <name>EasyDeviceInfo</name>
-    <url>https://github.com/nisrulz/easydeviceinfo</url>
-    <copyright>Copyright 2016 Nishant Srivastava</copyright>
     <license>Apache Software License 2.0</license>
   </notice>
   <notice>
@@ -48,5 +30,10 @@
     <copyright>Copyright 2014 Pixplicity (http://pixplicity.com)</copyright>
     <license>Apache Software License 2.0</license>
   </notice>
-
+  <notice>
+    <name>ThreeTenABP</name>
+    <url>https://github.com/JakeWharton/ThreeTenABP</url>
+    <copyright>Copyright (C) 2015 Jake Wharton</copyright>
+    <license>Apache Software License 2.0</license>
+  </notice>
 </notices>
