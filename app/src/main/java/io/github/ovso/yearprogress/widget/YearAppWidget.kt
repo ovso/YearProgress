@@ -50,6 +50,7 @@ class YearAppWidget : AppWidgetProvider() {
       // Construct the RemoteViews object
       val views = RemoteViews(context.packageName, R.layout.year_app_widget)
       views.setTextViewText(R.id.appwidget_text, widgetText)
+      views.setProgressBar(R.id.appwidget_progress, 100, getYearPer(), false);
 
       // Instruct the widget manager to update the widget
       appWidgetManager.updateAppWidget(appWidgetId, views)
