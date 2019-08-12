@@ -7,15 +7,13 @@ import android.widget.RemoteViews
 import io.github.ovso.yearprogress.R
 import io.github.ovso.yearprogress.R.array
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
-import org.threeten.bp.format.DateTimeFormatter
 
 /**
  * Implementation of App Widget functionality.
  */
-class YearAppWidget : AppWidgetProvider() {
+class MonthAppWidget : AppWidgetProvider() {
 
   override fun onUpdate(
     context: Context,
@@ -47,26 +45,23 @@ class YearAppWidget : AppWidgetProvider() {
     ) {
       println("OJH updateAppWidget")
 //      val widgetText = context.getString(R.string.appwidget_text)
-      val widgetText = "${getYearPer()}%"
+      val widgetText = "${getMonthPer()}%"
       // Construct the RemoteViews object
       val views = RemoteViews(context.packageName, R.layout.year_app_widget)
-      val title = context.resources.getStringArray(array.fragment_titles)[0]
+      val title = context.resources.getStringArray(array.fragment_titles)[1]
       views.setTextViewText(R.id.tv_widget_title, title);
+
       views.setTextViewText(R.id.tv_widget_percent, widgetText)
-      views.setProgressBar(R.id.progress_widget, 100, getYearPer(), false);
+      views.setProgressBar(R.id.progress_widget, 100, getMonthPer(), false);
 
       // Instruct the widget manager to update the widget
       appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    private fun getYearPer(): Int {
-      val year = hereAndNow().year
-      val endDate = "$year-12-31 23:59"
-      val ldtEnd = LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-      val endTime = ldtEnd.atZone(ZoneId.of(ZoneId.systemDefault().id))
-      val nowDayOfYear = hereAndNow().dayOfYear
-      val endDayOfYear = endTime.dayOfYear
-      return (nowDayOfYear.toDouble() / endDayOfYear.toDouble() * 100).toInt()
+    private fun getMonthPer(): Int {
+      val nowDay = hereAndNow().dayOfMonth
+      val lastDay = hereAndNow().month.maxLength()
+      return (nowDay.toDouble() / lastDay.toDouble() * 100).toInt()
     }
 
     private fun hereAndNow(): ZonedDateTime {
