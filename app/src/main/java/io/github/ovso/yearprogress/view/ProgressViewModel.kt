@@ -19,14 +19,13 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.atomic.AtomicInteger
 
 const val PERIOD_PROGRESS = 25L
-val PERCENT_COLORS = intArrayOf(0x9e9e9e, 0x757575, 0x616161, 0x424242, 0x000000)
 
 class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
 
   val progressObField = ObservableField<Int>()
   val percentObField = ObservableField<String>()
   val percentColorObField = ObservableField<Int>()
-  private val atomicInt = AtomicInteger(-1)
+  private val atomicInt = AtomicInteger(0)
   fun getTitle(): String = context.resources.getStringArray(array.fragment_titles)[position]
 
   init {
@@ -49,12 +48,15 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
       .subscribe {
         if (atomicInt.get() > percent) {
           intervalDisposable?.dispose()
+          atomicInt.set(0)
         } else {
-          progressObField.set(atomicInt.getAndIncrement())
-          percentObField.set("${atomicInt.getAndIncrement()}%")
+          progressObField.set(atomicInt.get())
+          percentObField.set("${atomicInt.get()}%")
           val color =
             Color.parseColor(context.resources.getStringArray(array.percent_colors2)[atomicInt.get() / 10])
           percentColorObField.set(color)
+
+          atomicInt.incrementAndGet()
         }
       }
   }
