@@ -14,9 +14,8 @@ class ExampleUnitTest {
   @Test
   fun addition_isCorrect() {
     //assertEquals(4, 2 + 2)
-    val arrayListOf = arrayListOf(50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60)
-    arrayListOf.forEach(Consumer {
-      println("${it / 5 / 2}, ${it % 5}")
-    })
+    val i = 86400000
+    val i1 = i / 1000 / 60 / 60
+    println("i1 = $i1")
   }
 }
