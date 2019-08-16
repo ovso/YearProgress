@@ -23,7 +23,7 @@
     <receiver android:name=".widget.MonthAppWidget">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-        <action android:name="com.eightbitcloud.example.widget.8BITCLOCK_WIDGET_UPDATE"/>
+        <action android:name="ACTION_AUTO_UPDATE_WIDGET"/>
       </intent-filter>
 
       <meta-data

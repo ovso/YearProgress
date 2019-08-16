@@ -13,12 +13,13 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.widget.Toast
 import io.github.ovso.yearprogress.R
+import timber.log.Timber
 
 /**
  * Implementation of App Widget functionality.
  */
 
-const val CLOCK_WIDGET_UPDATE = "com.eightbitcloud.example.widget.8BITCLOCK_WIDGET_UPDATE"
+const val ACTION_AUTO_UPDATE_WIDGET = "ACTION_AUTO_UPDATE_WIDGET"
 
 class DayAppWidget : AppWidgetProvider() {
 
@@ -36,25 +37,28 @@ class DayAppWidget : AppWidgetProvider() {
   }
 
   override fun onEnabled(context: Context) {
+    super.onEnabled(context)
     // Enter relevant functionality for when the first widget is created
     println("OJH onEnabled")
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     val calendar = Calendar.getInstance()
-    calendar.setTimeInMillis(System.currentTimeMillis())
-    calendar.add(Calendar.MINUTE, 1)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    calendar.timeInMillis = System.currentTimeMillis()
+    calendar.add(Calendar.SECOND, 1)
     alarmManager.setRepeating(
       AlarmManager.RTC,
-      calendar.getTimeInMillis(),
-      60000,
+      calendar.timeInMillis,
+      AlarmManager.INTERVAL_HALF_HOUR,
       createClockTickIntent(context)
     )
   }
 
   private fun createClockTickIntent(context: Context): PendingIntent {
-    val intent = Intent(CLOCK_WIDGET_UPDATE)
-
-    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    val intent = Intent(ACTION_AUTO_UPDATE_WIDGET)
+    return PendingIntent.getBroadcast(context, 0, intent, 0)
   }
 
   override fun onDisabled(context: Context) {
@@ -62,6 +66,11 @@ class DayAppWidget : AppWidgetProvider() {
     println("OJH onDisabled")
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     alarmManager.cancel(createClockTickIntent(context))
+  }
+
+  override fun onReceive(context: Context?, intent: Intent?) {
+    super.onReceive(context, intent)
+    Timber.d("OJH onReceive()")
   }
 
   companion object {
@@ -97,3 +106,8 @@ class DayAppWidget : AppWidgetProvider() {
     }
   }
 }
+
+//https://stackoverflow.com/questions/5476867/updating-app-widget-using-alarmmanager
+//http://allandroidprojects.blogspot.com/2016/06/android-widget-tutorial-updating-with.html
+//https://github.com/brucejcooper/Android-Examples/blob/master/WidgetExample/src/com/eightbitcloud/example/widget/ExampleAppWidgetProvider.java
+//https://stackoverflow.com/questions/15391334/change-widget-update-interval-programatically-android
