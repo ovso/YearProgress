@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(layout.activity_main)
     val contentView =
       DataBindingUtil.setContentView<ActivityMainBinding>(this,
         layout.activity_main

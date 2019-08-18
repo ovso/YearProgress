@@ -8,6 +8,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import android.app.AlarmManager
+import android.app.AlertDialog
 import java.util.Calendar
 import android.app.PendingIntent
 import android.content.Intent
@@ -68,11 +69,6 @@ class DayAppWidget : AppWidgetProvider() {
     alarmManager.cancel(createClockTickIntent(context))
   }
 
-  override fun onReceive(context: Context?, intent: Intent?) {
-    super.onReceive(context, intent)
-    Timber.d("OJH onReceive()")
-  }
-
   companion object {
 
     internal fun updateAppWidget(
@@ -111,3 +107,4 @@ class DayAppWidget : AppWidgetProvider() {
 //http://allandroidprojects.blogspot.com/2016/06/android-widget-tutorial-updating-with.html
 //https://github.com/brucejcooper/Android-Examples/blob/master/WidgetExample/src/com/eightbitcloud/example/widget/ExampleAppWidgetProvider.java
 //https://stackoverflow.com/questions/15391334/change-widget-update-interval-programatically-android
+//https://code.tutsplus.com/tutorials/code-a-widget-for-your-android-app-updating-your-widget--cms-30528
