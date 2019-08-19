@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import kotlinx.android.synthetic.main.content_main.bottomNavigationView
 import timber.log.Timber
+import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,7 +30,8 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val contentView =
-      DataBindingUtil.setContentView<ActivityMainBinding>(this,
+      DataBindingUtil.setContentView<ActivityMainBinding>(
+        this,
         layout.activity_main
       )
     viewModel = provideViewModel()
