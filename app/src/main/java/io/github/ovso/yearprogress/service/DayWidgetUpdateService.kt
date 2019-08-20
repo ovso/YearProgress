@@ -16,6 +16,7 @@ class DayWidgetUpdateService : Service() {
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     updateAppWidget(this, AppWidgetManager.getInstance(this), 0);
+    stopSelf()
     return super.onStartCommand(intent, flags, startId)
   }
 
