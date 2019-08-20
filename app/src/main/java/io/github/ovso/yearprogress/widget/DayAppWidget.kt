@@ -24,6 +24,7 @@ const val ACTION_AUTO_UPDATE_WIDGET = "ACTION_AUTO_UPDATE_WIDGET"
 
 class DayAppWidget : AppWidgetProvider() {
 
+  private var mSender: PendingIntent? = null
   override fun onUpdate(
     context: Context,
     appWidgetManager: AppWidgetManager,
@@ -42,19 +43,24 @@ class DayAppWidget : AppWidgetProvider() {
     // Enter relevant functionality for when the first widget is created
     println("OJH onEnabled")
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
+    val intent = Intent(ACTION_AUTO_UPDATE_WIDGET)
+    mSender = PendingIntent.getBroadcast(context, 0, intent, 0)
     val calendar = Calendar.getInstance()
     calendar.set(Calendar.MINUTE, 0)
     calendar.set(Calendar.SECOND, 0)
     calendar.set(Calendar.MILLISECOND, 0)
     calendar.timeInMillis = System.currentTimeMillis()
     calendar.add(Calendar.SECOND, 1)
+    val firstTime = System.currentTimeMillis() + 5000
+    alarmManager.set(AlarmManager.RTC, firstTime, mSender)
+/*
     alarmManager.setRepeating(
       AlarmManager.RTC,
       calendar.timeInMillis,
       AlarmManager.INTERVAL_HALF_HOUR,
       createClockTickIntent(context)
     )
+*/
   }
 
   private fun createClockTickIntent(context: Context): PendingIntent {
@@ -101,6 +107,13 @@ class DayAppWidget : AppWidgetProvider() {
       return Instant.now()
     }
   }
+
+  override fun onReceive(context: Context?, intent: Intent?) {
+    super.onReceive(context, intent)
+    Timber.d("onReceive")
+  }
+
+
 }
 
 //https://stackoverflow.com/questions/5476867/updating-app-widget-using-alarmmanager
