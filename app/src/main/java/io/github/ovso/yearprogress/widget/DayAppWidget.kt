@@ -1,20 +1,20 @@
 package io.github.ovso.yearprogress.widget
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
+import android.os.SystemClock
 import android.widget.RemoteViews
+import io.github.ovso.yearprogress.R
+import io.github.ovso.yearprogress.service.DayWidgetUpdateService
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
-import android.app.AlarmManager
-import android.app.AlertDialog
-import java.util.Calendar
-import android.app.PendingIntent
-import android.content.Intent
-import android.widget.Toast
-import io.github.ovso.yearprogress.R
 import timber.log.Timber
+import java.util.Calendar
 
 /**
  * Implementation of App Widget functionality.
@@ -23,44 +23,54 @@ import timber.log.Timber
 const val ACTION_AUTO_UPDATE_WIDGET = "ACTION_AUTO_UPDATE_WIDGET"
 
 class DayAppWidget : AppWidgetProvider() {
-
-  private var mSender: PendingIntent? = null
+  var service: PendingIntent? = null
   override fun onUpdate(
     context: Context,
     appWidgetManager: AppWidgetManager,
     appWidgetIds: IntArray
   ) {
     // There may be multiple widgets active, so update all of them
+/*
     for (appWidgetId in appWidgetIds) {
       println("OJH onUpdate = $appWidgetId")
       updateAppWidget(context, appWidgetManager, appWidgetId)
     }
     Toast.makeText(context, "onUpdate", Toast.LENGTH_LONG).show()
+*/
+
+    val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val intent = Intent(context, DayWidgetUpdateService::class.java)
+
+    if (service == null) {
+      service = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+    }
+    manager.setRepeating(
+      AlarmManager.ELAPSED_REALTIME,
+      SystemClock.elapsedRealtime(),
+      60000,
+      service
+    )
   }
 
   override fun onEnabled(context: Context) {
     super.onEnabled(context)
     // Enter relevant functionality for when the first widget is created
     println("OJH onEnabled")
+
+/*
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    val intent = Intent(ACTION_AUTO_UPDATE_WIDGET)
-    mSender = PendingIntent.getBroadcast(context, 0, intent, 0)
+
     val calendar = Calendar.getInstance()
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
     calendar.timeInMillis = System.currentTimeMillis()
     calendar.add(Calendar.SECOND, 1)
-    val firstTime = System.currentTimeMillis() + 5000
-    alarmManager.set(AlarmManager.RTC, firstTime, mSender)
-/*
     alarmManager.setRepeating(
       AlarmManager.RTC,
       calendar.timeInMillis,
-      AlarmManager.INTERVAL_HALF_HOUR,
+      60000,
       createClockTickIntent(context)
     )
 */
+
   }
 
   private fun createClockTickIntent(context: Context): PendingIntent {
@@ -72,7 +82,7 @@ class DayAppWidget : AppWidgetProvider() {
     // Enter relevant functionality for when the last widget is disabled
     println("OJH onDisabled")
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    alarmManager.cancel(createClockTickIntent(context))
+    //alarmManager.cancel(createClockTickIntent(context))
   }
 
   companion object {
@@ -113,11 +123,6 @@ class DayAppWidget : AppWidgetProvider() {
     Timber.d("onReceive")
   }
 
-
 }
 
-//https://stackoverflow.com/questions/5476867/updating-app-widget-using-alarmmanager
-//http://allandroidprojects.blogspot.com/2016/06/android-widget-tutorial-updating-with.html
-//https://github.com/brucejcooper/Android-Examples/blob/master/WidgetExample/src/com/eightbitcloud/example/widget/ExampleAppWidgetProvider.java
-//https://stackoverflow.com/questions/15391334/change-widget-update-interval-programatically-android
-//https://code.tutsplus.com/tutorials/code-a-widget-for-your-android-app-updating-your-widget--cms-30528
+// https://medium.com/android-bits/android-widgets-ad3d166458d3
