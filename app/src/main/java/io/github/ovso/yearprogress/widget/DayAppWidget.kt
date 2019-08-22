@@ -28,7 +28,7 @@ class DayAppWidget : AppWidgetProvider() {
     appWidgetIds: IntArray
   ) {
     // There may be multiple widgets active, so update all of them
-    Timber.d("OJH onUpdate(...)")
+    Timber.d("OJH onUpdate()")
     for (appWidgetId in appWidgetIds) {
       updateAppWidget(context, appWidgetManager, appWidgetId)
     }
@@ -36,16 +36,14 @@ class DayAppWidget : AppWidgetProvider() {
 
   override fun onEnabled(context: Context) {
     // Enter relevant functionality for when the first widget is created
-    println("OJH onEnabled(..)")
-
+    println("OJH onEnabled()")
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = System.currentTimeMillis()
     alarmManager.setRepeating(
-      AlarmManager.RTC_WAKEUP,
+      AlarmManager.RTC,
       calendar.timeInMillis,
-      60000,
+      600000,
       createPendingIntent(context)
     )
     super.onEnabled(context)
@@ -53,12 +51,17 @@ class DayAppWidget : AppWidgetProvider() {
 
   private fun createPendingIntent(context: Context): PendingIntent {
     val intent = Intent(ACTION_AUTO_UPDATE_WIDGET)
-    return PendingIntent.getBroadcast(context, 0, intent, 0)
+    return PendingIntent.getBroadcast(
+      context,
+      0,
+      intent,
+      PendingIntent.FLAG_CANCEL_CURRENT
+    )
   }
 
   override fun onDisabled(context: Context) {
     // Enter relevant functionality for when the last widget is disabled
-    println("OJH onDisabled(..)")
+    println("OJH onDisabled()")
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     alarmManager.cancel(createPendingIntent(context))
   }
@@ -69,7 +72,7 @@ class DayAppWidget : AppWidgetProvider() {
       context: Context, appWidgetManager: AppWidgetManager,
       appWidgetId: Int
     ) {
-      println("OJH updateAppWidget(..)")
+      println("OJH updateAppWidget()")
 //      val widgetText = context.getString(R.string.appwidget_text)
       val widgetText = "${getDayPer()}%"
       // Construct the RemoteViews object
@@ -98,7 +101,7 @@ class DayAppWidget : AppWidgetProvider() {
 
   override fun onReceive(context: Context?, intent: Intent?) {
     super.onReceive(context, intent)
-    Timber.d("OJH onReceive(..)")
+    Timber.d("OJH onReceive()")
     intent?.action?.let {
       context?.let {
         val manager = AppWidgetManager.getInstance(context)
