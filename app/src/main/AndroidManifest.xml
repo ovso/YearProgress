@@ -22,8 +22,7 @@
     </receiver>
     <receiver android:name=".widget.MonthAppWidget">
       <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-        <action android:name="ACTION_AUTO_UPDATE_WIDGET"/>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE_DAY"/>
       </intent-filter>
 
       <meta-data

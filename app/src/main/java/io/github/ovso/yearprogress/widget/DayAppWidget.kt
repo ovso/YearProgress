@@ -19,7 +19,7 @@ import java.util.Calendar
  * Implementation of App Widget functionality.
  */
 
-const val ACTION_AUTO_UPDATE_WIDGET = "ACTION_AUTO_UPDATE_WIDGET"
+const val ACTION_AUTO_UPDATE_WIDGET = "android.appwidget.action.APPWIDGET_UPDATE_DAY"
 
 class DayAppWidget : AppWidgetProvider() {
   override fun onUpdate(
@@ -42,17 +42,16 @@ class DayAppWidget : AppWidgetProvider() {
 
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = System.currentTimeMillis()
-    calendar.add(Calendar.SECOND, 1)
     alarmManager.setRepeating(
       AlarmManager.RTC_WAKEUP,
       calendar.timeInMillis,
       60000,
-      createClockTickIntent(context)
+      createPendingIntent(context)
     )
     super.onEnabled(context)
   }
 
-  private fun createClockTickIntent(context: Context): PendingIntent {
+  private fun createPendingIntent(context: Context): PendingIntent {
     val intent = Intent(ACTION_AUTO_UPDATE_WIDGET)
     return PendingIntent.getBroadcast(context, 0, intent, 0)
   }
@@ -60,6 +59,8 @@ class DayAppWidget : AppWidgetProvider() {
   override fun onDisabled(context: Context) {
     // Enter relevant functionality for when the last widget is disabled
     println("OJH onDisabled(..)")
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    alarmManager.cancel(createPendingIntent(context))
   }
 
   companion object {
