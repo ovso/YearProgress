@@ -52,7 +52,6 @@
           android:resource="@xml/year_app_widget_info" />
     </receiver>
 
-    <service android:name=".service.DayWidgetUpdateService" />
   </application>
 
 </manifest>
