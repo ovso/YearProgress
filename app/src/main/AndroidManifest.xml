@@ -30,7 +30,7 @@
 
       <meta-data
           android:name="android.appwidget.provider"
-          android:resource="@xml/month_app_widget_info" />
+          android:resource="@xml/app_widget_info_month" />
     </receiver>
     <receiver android:name=".widget.DayAppWidget">
       <intent-filter>
@@ -39,7 +39,7 @@
 
       <meta-data
           android:name="android.appwidget.provider"
-          android:resource="@xml/day_app_widget_info" />
+          android:resource="@xml/app_widget_info_day" />
     </receiver>
 
     <receiver android:name=".widget.YearAppWidget">
@@ -49,7 +49,7 @@
 
       <meta-data
           android:name="android.appwidget.provider"
-          android:resource="@xml/year_app_widget_info" />
+          android:resource="@xml/app_widget_info_year" />
     </receiver>
 
   </application>
