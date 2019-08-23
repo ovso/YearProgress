@@ -41,6 +41,7 @@
       />
 
   <ImageButton
+      android:id="@+id/ib_widget_refresh"
       android:layout_width="30dp"
       android:layout_height="30dp"
       android:layout_gravity="start|bottom"

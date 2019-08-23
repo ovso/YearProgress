@@ -8,6 +8,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
+import android.widget.Toast
 import io.github.ovso.yearprogress.R
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
@@ -20,6 +21,7 @@ import java.util.Calendar
  */
 
 const val ACTION_AUTO_UPDATE_WIDGET = "android.appwidget.action.APPWIDGET_UPDATE_DAY"
+const val ACTION_REFRESH = "action_refresh"
 
 class DayAppWidget : AppWidgetProvider() {
   override fun onUpdate(
@@ -82,9 +84,25 @@ class DayAppWidget : AppWidgetProvider() {
       views.setTextViewText(R.id.tv_widget_title, title);
       views.setTextViewText(R.id.tv_widget_percent, widgetText)
       views.setProgressBar(R.id.progress_widget, 100, getDayPer(), false);
+      setClickViews(context, views);
 
       // Instruct the widget manager to update the widget
       appWidgetManager.updateAppWidget(appWidgetId, views)
+    }
+
+    private fun setClickViews(context: Context, views: RemoteViews) {
+      val intent = Intent(context, DayAppWidget::class.java).apply {
+        action = ACTION_REFRESH
+      }
+      views.setOnClickPendingIntent(
+        R.id.ib_widget_refresh,
+        PendingIntent.getBroadcast(
+          context,
+          0,
+          intent,
+          PendingIntent.FLAG_UPDATE_CURRENT
+        )
+      )
     }
 
     private fun getDayPer() =
@@ -101,15 +119,17 @@ class DayAppWidget : AppWidgetProvider() {
 
   override fun onReceive(context: Context?, intent: Intent?) {
     super.onReceive(context, intent)
-    Timber.d("OJH onReceive()")
     intent?.action?.let {
-      context?.let {
+      if (it == ACTION_AUTO_UPDATE_WIDGET) {
+        Timber.d("OJH onReceive ACTION_AUTO_UPDATE_WIDGET")
         val manager = AppWidgetManager.getInstance(context)
         onUpdate(
-          context,
+          context!!,
           manager,
           manager.getAppWidgetIds(ComponentName(context, DayAppWidget::class.java))
         )
+      } else if (it == ACTION_REFRESH) {
+        Timber.d("OJH onReceive ACTION_REFRESH")
       }
     }
   }
