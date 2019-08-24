@@ -21,4 +21,7 @@
   <string name="main_nav_review">Review</string>
   <string name="appwidget_text">EXAMPLE</string>
   <string name="add_widget">Add widget</string>
+  <string name="widget_label_day">Day progress</string>
+  <string name="widget_label_month">Month progress</string>
+  <string name="widget_label_year">Year progress</string>
 </resources>

@@ -23,16 +23,8 @@
       </intent-filter>
     </activity>
 
-    <receiver android:name=".widget.MonthAppWidget">
-      <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-      </intent-filter>
-
-      <meta-data
-          android:name="android.appwidget.provider"
-          android:resource="@xml/app_widget_info_month" />
-    </receiver>
-    <receiver android:name=".widget.DayAppWidget">
+    <receiver android:name=".widget.DayAppWidget"
+        android:label="@string/widget_label_day">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
       </intent-filter>
@@ -42,7 +34,19 @@
           android:resource="@xml/app_widget_info_day" />
     </receiver>
 
-    <receiver android:name=".widget.YearAppWidget">
+    <receiver android:name=".widget.MonthAppWidget"
+        android:label="@string/widget_label_month">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+
+      <meta-data
+          android:name="android.appwidget.provider"
+          android:resource="@xml/app_widget_info_month" />
+    </receiver>
+
+    <receiver android:name=".widget.YearAppWidget"
+        android:label="@string/widget_label_year">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
       </intent-filter>
