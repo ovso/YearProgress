@@ -26,6 +26,8 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
   val percentObField = ObservableField<String>()
   val percentColorObField = ObservableField<Int>()
   private val atomicInt = AtomicInteger(0)
+  private var intervalDisposable: Disposable? = null
+
   fun getTitle(): String = context.resources.getStringArray(array.fragment_titles)[position]
 
   init {
@@ -36,7 +38,7 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
     }
   }
 
-  private var intervalDisposable: Disposable? = null
+
 
   private fun setupPercent(percent: Int) {
     Timber.d("setupPercent($percent)")

@@ -10,17 +10,27 @@ import android.widget.RemoteViews
 import android.widget.Toast
 import io.github.ovso.yearprogress.R
 import io.github.ovso.yearprogress.R.array
+import io.github.ovso.yearprogress.view.PERIOD_PROGRESS
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Implementation of App Widget functionality.
  */
 class YearAppWidget : AppWidgetProvider() {
+
+  private val atomicInt = AtomicInteger(getYearPer())
+  private var intervalDisposable: Disposable? = null
 
   override fun onUpdate(
     context: Context,
@@ -29,32 +39,48 @@ class YearAppWidget : AppWidgetProvider() {
   ) {
     // There may be multiple widgets active, so update all of them
     for (appWidgetId in appWidgetIds) {
-      println("OJH onUpdate = $appWidgetId")
-      updateAppWidget(context, appWidgetManager, appWidgetId)
+      Timber.d("OJH onUpdate = $appWidgetId")
+      updateAppWidget(context, appWidgetManager, appWidgetId, atomicInt.get())
     }
   }
 
   override fun onEnabled(context: Context) {
     // Enter relevant functionality for when the first widget is created
-    println("OJH onEnabled")
+    Timber.d("OJH onEnabled")
+    Timber.d("OJH onEnabled getYearPer() = ${getYearPer()}")
   }
 
   override fun onDisabled(context: Context) {
     // Enter relevant functionality for when the last widget is disabled
-    println("OJH onDisabled")
+    Timber.d("OJH onDisabled")
   }
 
   override fun onReceive(context: Context?, intent: Intent?) {
     super.onReceive(context, intent)
+//    atomicInt.set(getYearPer())
+    Timber.d("OJH onReceive counter = ${atomicInt.get()}")
     intent?.action?.let {
       if (it == ACTION_REFRESH) {
+        atomicInt.set(0)
         Timber.d("OJH Year onReceive action_refresh")
         val manager = AppWidgetManager.getInstance(context)
-        onUpdate(
-          context!!,
-          manager,
-          manager.getAppWidgetIds(ComponentName(context, YearAppWidget::class.java))
-        )
+        val yearPer = getYearPer()
+        intervalDisposable = Observable.interval(PERIOD_PROGRESS, MILLISECONDS)
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe {
+            if (atomicInt.get() > yearPer) {
+              intervalDisposable?.dispose()
+              atomicInt.set(0)
+            } else {
+              onUpdate(
+                context!!,
+                manager,
+                manager.getAppWidgetIds(ComponentName(context, YearAppWidget::class.java))
+              )
+              atomicInt.incrementAndGet()
+            }
+          }
 
         Toast.makeText(context, R.string.widget_msg_updated, Toast.LENGTH_SHORT).show()
       }
@@ -66,18 +92,17 @@ class YearAppWidget : AppWidgetProvider() {
 
     internal fun updateAppWidget(
       context: Context, appWidgetManager: AppWidgetManager,
-      appWidgetId: Int
+      appWidgetId: Int, counter: Int
     ) {
-      println("OJH updateAppWidget")
-//      val widgetText = context.getString(R.string.appwidget_text)
-      val widgetText = "${getYearPer()}%"
+      Timber.d("updateAppWidget updateAppWidget counter = $counter")
+      val widgetText = "${counter}%"
       // Construct the RemoteViews object
       val views = RemoteViews(context.packageName, R.layout.year_app_widget)
       val title = context.resources.getStringArray(array.fragment_titles)[0]
-      views.setTextViewText(R.id.tv_widget_title, title);
+      views.setTextViewText(R.id.tv_widget_title, title)
       views.setTextViewText(R.id.tv_widget_percent, widgetText)
-      views.setProgressBar(R.id.progress_widget, 100, getYearPer(), false);
-      setClickViews(context, views);
+      views.setProgressBar(R.id.progress_widget, 100, counter, false)
+      setClickViews(context, views)
       // Instruct the widget manager to update the widget
       appWidgetManager.updateAppWidget(appWidgetId, views)
     }
