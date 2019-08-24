@@ -20,7 +20,7 @@ import java.util.Calendar
  * Implementation of App Widget functionality.
  */
 
-const val ACTION_AUTO_UPDATE_WIDGET = "android.appwidget.action.APPWIDGET_UPDATE_DAY"
+const val ACTION_AUTO_UPDATE_WIDGET = "android.appwidget.action.APPWIDGET_UPDATE"
 const val ACTION_REFRESH = "action_refresh"
 
 class DayAppWidget : AppWidgetProvider() {
