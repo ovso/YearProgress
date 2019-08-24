@@ -1,9 +1,13 @@
 package io.github.ovso.yearprogress.widget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.widget.RemoteViews
+import android.widget.Toast
 import io.github.ovso.yearprogress.R
 import io.github.ovso.yearprogress.R.array
 import org.threeten.bp.Instant
@@ -11,6 +15,7 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import timber.log.Timber
 
 /**
  * Implementation of App Widget functionality.
@@ -39,6 +44,24 @@ class YearAppWidget : AppWidgetProvider() {
     println("OJH onDisabled")
   }
 
+  override fun onReceive(context: Context?, intent: Intent?) {
+    super.onReceive(context, intent)
+    intent?.action?.let {
+      if (it == ACTION_REFRESH) {
+        Timber.d("OJH Year onReceive action_refresh")
+        val manager = AppWidgetManager.getInstance(context)
+        onUpdate(
+          context!!,
+          manager,
+          manager.getAppWidgetIds(ComponentName(context, YearAppWidget::class.java))
+        )
+
+        Toast.makeText(context, R.string.widget_msg_updated, Toast.LENGTH_SHORT).show()
+      }
+    }
+
+  }
+
   companion object {
 
     internal fun updateAppWidget(
@@ -54,9 +77,24 @@ class YearAppWidget : AppWidgetProvider() {
       views.setTextViewText(R.id.tv_widget_title, title);
       views.setTextViewText(R.id.tv_widget_percent, widgetText)
       views.setProgressBar(R.id.progress_widget, 100, getYearPer(), false);
-
+      setClickViews(context, views);
       // Instruct the widget manager to update the widget
       appWidgetManager.updateAppWidget(appWidgetId, views)
+    }
+
+    private fun setClickViews(context: Context, views: RemoteViews) {
+      val intent = Intent(context, YearAppWidget::class.java).apply {
+        action = ACTION_REFRESH
+      }
+      views.setOnClickPendingIntent(
+        R.id.ib_widget_refresh,
+        PendingIntent.getBroadcast(
+          context,
+          0,
+          intent,
+          PendingIntent.FLAG_UPDATE_CURRENT
+        )
+      )
     }
 
     private fun getYearPer(): Int {
