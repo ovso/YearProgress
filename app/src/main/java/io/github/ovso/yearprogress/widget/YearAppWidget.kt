@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 class YearAppWidget : AppWidgetProvider() {
   private val compositeDisposable = CompositeDisposable()
-  private val atomicInt = AtomicInteger(getYearPer())
+  private val progressAtomic = AtomicInteger(getYearPer())
 
   override fun onUpdate(
     context: Context,
@@ -39,8 +39,7 @@ class YearAppWidget : AppWidgetProvider() {
   ) {
     // There may be multiple widgets active, so update all of them
     for (appWidgetId in appWidgetIds) {
-      Timber.d("OJH onUpdate = $appWidgetId")
-      updateAppWidget(context, appWidgetManager, appWidgetId, atomicInt.get())
+      updateAppWidget(context, appWidgetManager, appWidgetId, progressAtomic.get())
     }
   }
 
@@ -59,17 +58,17 @@ class YearAppWidget : AppWidgetProvider() {
     compositeDisposable.add(d)
   }
 
-  fun clearDisposable() {
+  private fun clearDisposable() {
     compositeDisposable.clear()
   }
 
   override fun onReceive(context: Context?, intent: Intent?) {
     super.onReceive(context, intent)
-    Timber.d("OJH onReceive counter = ${atomicInt.get()}")
+    Timber.d("OJH onReceive counter = ${progressAtomic.get()}")
     intent?.action?.let {
       if (it == ACTION_REFRESH) {
         Timber.d("OJH Year onReceive action_refresh")
-        atomicInt.set(0)
+        progressAtomic.set(0)
         val manager = AppWidgetManager.getInstance(context)
         val yearPer = getYearPer()
         clearDisposable()
@@ -78,8 +77,8 @@ class YearAppWidget : AppWidgetProvider() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-              if (atomicInt.get() > yearPer) {
-                atomicInt.set(0)
+              if (progressAtomic.get() > yearPer) {
+                progressAtomic.set(0)
                 clearDisposable()
               } else {
                 onUpdate(
@@ -87,7 +86,7 @@ class YearAppWidget : AppWidgetProvider() {
                   manager,
                   manager.getAppWidgetIds(ComponentName(context, YearAppWidget::class.java))
                 )
-                atomicInt.incrementAndGet()
+                progressAtomic.incrementAndGet()
               }
             }
         )
@@ -110,16 +109,16 @@ class YearAppWidget : AppWidgetProvider() {
 
     internal fun updateAppWidget(
       context: Context, appWidgetManager: AppWidgetManager,
-      appWidgetId: Int, counter: Int
+      appWidgetId: Int, progress: Int
     ) {
-      Timber.d("updateAppWidget updateAppWidget counter = $counter")
-      val widgetText = "${counter}%"
+      Timber.d("updateAppWidget updateAppWidget progress = $progress")
+      val widgetText = "${progress}%"
       // Construct the RemoteViews object
       val views = RemoteViews(context.packageName, R.layout.year_app_widget)
       val title = context.resources.getStringArray(array.fragment_titles)[0]
       views.setTextViewText(R.id.tv_widget_title, title)
       views.setTextViewText(R.id.tv_widget_percent, widgetText)
-      views.setProgressBar(R.id.progress_widget, 100, counter, false)
+      views.setProgressBar(R.id.progress_widget, 100, progress, false)
       setClickViews(context, views)
       // Instruct the widget manager to update the widget
       appWidgetManager.updateAppWidget(appWidgetId, views)

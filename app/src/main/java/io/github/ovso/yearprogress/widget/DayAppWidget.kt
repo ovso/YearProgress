@@ -8,23 +8,31 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import android.widget.Toast
 import io.github.ovso.yearprogress.R
+import io.github.ovso.yearprogress.view.MainActivity
+import io.github.ovso.yearprogress.view.PERIOD_PROGRESS
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import timber.log.Timber
 import java.util.Calendar
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Implementation of App Widget functionality.
  */
 
-const val ACTION_AUTO_UPDATE_WIDGET = "android.appwidget.action.APPWIDGET_UPDATE"
-const val ACTION_REFRESH = "action_refresh"
-const val ACTION_LAUNCHER_MAIN = "action_launcher_main"
-
 class DayAppWidget : AppWidgetProvider() {
+
+  private val compositeDisposable = CompositeDisposable()
+  private val progressAtomic = AtomicInteger(getDayPer())
+
   override fun onUpdate(
     context: Context,
     appWidgetManager: AppWidgetManager,
@@ -33,7 +41,7 @@ class DayAppWidget : AppWidgetProvider() {
     // There may be multiple widgets active, so update all of them
     Timber.d("OJH onUpdate()")
     for (appWidgetId in appWidgetIds) {
-      updateAppWidget(context, appWidgetManager, appWidgetId)
+      updateAppWidget(context, appWidgetManager, appWidgetId, progressAtomic.get())
     }
   }
 
@@ -67,25 +75,27 @@ class DayAppWidget : AppWidgetProvider() {
     println("OJH onDisabled()")
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     alarmManager.cancel(createPendingIntent(context))
+    clearDisposable()
   }
 
   companion object {
 
     internal fun updateAppWidget(
       context: Context, appWidgetManager: AppWidgetManager,
-      appWidgetId: Int
+      appWidgetId: Int,
+      progress:Int
     ) {
-      println("OJH updateAppWidget()")
+      Timber.d("updateAppWidget updateAppWidget progress = $progress")
 //      val widgetText = context.getString(R.string.appwidget_text)
-      val widgetText = "${getDayPer()}%"
+      val widgetText = "$progress%"
       // Construct the RemoteViews object
       val views = RemoteViews(context.packageName, R.layout.year_app_widget)
 
       val title = context.resources.getStringArray(R.array.fragment_titles)[2]
       views.setTextViewText(R.id.tv_widget_title, title);
       views.setTextViewText(R.id.tv_widget_percent, widgetText)
-      views.setProgressBar(R.id.progress_widget, 100, getDayPer(), false);
-      setClickViews(context, views);
+      views.setProgressBar(R.id.progress_widget, 100, progress, false)
+      setClickViews(context, views)
 
       // Instruct the widget manager to update the widget
       appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -104,6 +114,19 @@ class DayAppWidget : AppWidgetProvider() {
           PendingIntent.FLAG_UPDATE_CURRENT
         )
       )
+
+      views.setOnClickPendingIntent(
+        R.id.fl_widget_root,
+        PendingIntent.getBroadcast(
+          context,
+          1,
+          Intent(context, DayAppWidget::class.java).apply {
+            action = ACTION_LAUNCHER_MAIN
+          },
+          PendingIntent.FLAG_UPDATE_CURRENT
+        )
+      )
+
     }
 
     private fun getDayPer() =
@@ -118,6 +141,14 @@ class DayAppWidget : AppWidgetProvider() {
     }
   }
 
+  private fun addDisposable(d: Disposable) {
+    compositeDisposable.add(d)
+  }
+
+  private fun clearDisposable() {
+    compositeDisposable.clear()
+  }
+
   override fun onReceive(context: Context?, intent: Intent?) {
     super.onReceive(context, intent)
     intent?.action?.let {
@@ -129,9 +160,42 @@ class DayAppWidget : AppWidgetProvider() {
           manager,
           manager.getAppWidgetIds(ComponentName(context, DayAppWidget::class.java))
         )
-      } else if (it == ACTION_REFRESH) {
-        Timber.d("OJH onReceive ACTION_REFRESH")
+      } else       if (it == ACTION_REFRESH) {
+        Timber.d("OJH Year onReceive action_refresh")
+        progressAtomic.set(0)
+        val manager = AppWidgetManager.getInstance(context)
+        val dayPer = getDayPer()
+        clearDisposable()
+        addDisposable(
+          Observable.interval(PERIOD_PROGRESS, MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+              if (progressAtomic.get() > dayPer) {
+                progressAtomic.set(0)
+                clearDisposable()
+              } else {
+                onUpdate(
+                  context!!,
+                  manager,
+                  manager.getAppWidgetIds(ComponentName(context, DayAppWidget::class.java))
+                )
+                progressAtomic.incrementAndGet()
+              }
+            }
+        )
+
+      } else if (it == ACTION_LAUNCHER_MAIN) {
+        context!!.startActivity(
+          Intent(context, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+          }
+        )
       }
+
     }
   }
 
