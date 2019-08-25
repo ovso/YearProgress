@@ -7,12 +7,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import android.widget.Toast
 import io.github.ovso.yearprogress.R
 import io.github.ovso.yearprogress.R.array
+import io.github.ovso.yearprogress.view.MainActivity
 import io.github.ovso.yearprogress.view.PERIOD_PROGRESS
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
@@ -28,9 +29,8 @@ import java.util.concurrent.atomic.AtomicInteger
  * Implementation of App Widget functionality.
  */
 class YearAppWidget : AppWidgetProvider() {
-
+  private val compositeDisposable = CompositeDisposable()
   private val atomicInt = AtomicInteger(getYearPer())
-  private var intervalDisposable: Disposable? = null
 
   override fun onUpdate(
     context: Context,
@@ -47,42 +47,60 @@ class YearAppWidget : AppWidgetProvider() {
   override fun onEnabled(context: Context) {
     // Enter relevant functionality for when the first widget is created
     Timber.d("OJH onEnabled")
-    Timber.d("OJH onEnabled getYearPer() = ${getYearPer()}")
   }
 
   override fun onDisabled(context: Context) {
     // Enter relevant functionality for when the last widget is disabled
     Timber.d("OJH onDisabled")
+    clearDisposable()
+  }
+
+  private fun addDisposable(d: Disposable) {
+    compositeDisposable.add(d)
+  }
+
+  fun clearDisposable() {
+    compositeDisposable.clear()
   }
 
   override fun onReceive(context: Context?, intent: Intent?) {
     super.onReceive(context, intent)
-//    atomicInt.set(getYearPer())
     Timber.d("OJH onReceive counter = ${atomicInt.get()}")
     intent?.action?.let {
       if (it == ACTION_REFRESH) {
-        atomicInt.set(0)
         Timber.d("OJH Year onReceive action_refresh")
+        atomicInt.set(0)
         val manager = AppWidgetManager.getInstance(context)
         val yearPer = getYearPer()
-        intervalDisposable = Observable.interval(PERIOD_PROGRESS, MILLISECONDS)
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe {
-            if (atomicInt.get() > yearPer) {
-              intervalDisposable?.dispose()
-              atomicInt.set(0)
-            } else {
-              onUpdate(
-                context!!,
-                manager,
-                manager.getAppWidgetIds(ComponentName(context, YearAppWidget::class.java))
-              )
-              atomicInt.incrementAndGet()
+        clearDisposable()
+        addDisposable(
+          Observable.interval(PERIOD_PROGRESS, MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+              if (atomicInt.get() > yearPer) {
+                atomicInt.set(0)
+                clearDisposable()
+              } else {
+                onUpdate(
+                  context!!,
+                  manager,
+                  manager.getAppWidgetIds(ComponentName(context, YearAppWidget::class.java))
+                )
+                atomicInt.incrementAndGet()
+              }
             }
-          }
+        )
 
-        Toast.makeText(context, R.string.widget_msg_updated, Toast.LENGTH_SHORT).show()
+      } else if (it == ACTION_LAUNCHER_MAIN) {
+        context!!.startActivity(
+          Intent(context, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+          }
+        )
       }
     }
 
@@ -108,15 +126,26 @@ class YearAppWidget : AppWidgetProvider() {
     }
 
     private fun setClickViews(context: Context, views: RemoteViews) {
-      val intent = Intent(context, YearAppWidget::class.java).apply {
-        action = ACTION_REFRESH
-      }
       views.setOnClickPendingIntent(
         R.id.ib_widget_refresh,
         PendingIntent.getBroadcast(
           context,
           0,
-          intent,
+          Intent(context, YearAppWidget::class.java).apply {
+            action = ACTION_REFRESH
+          },
+          PendingIntent.FLAG_UPDATE_CURRENT
+        )
+      )
+
+      views.setOnClickPendingIntent(
+        R.id.fl_widget_root,
+        PendingIntent.getBroadcast(
+          context,
+          1,
+          Intent(context, YearAppWidget::class.java).apply {
+            action = ACTION_LAUNCHER_MAIN
+          },
           PendingIntent.FLAG_UPDATE_CURRENT
         )
       )

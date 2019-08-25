@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.activity_main.drawer_layout
 import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import kotlinx.android.synthetic.main.content_main.bottomNavigationView
-import org.jetbrains.anko.alert
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
