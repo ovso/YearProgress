@@ -96,6 +96,7 @@ class MonthAppWidget : AppWidgetProvider() {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            putExtra(EXTRA_NAME_INDEX, BottomNav.MONTH.index)
           }
         )
       }

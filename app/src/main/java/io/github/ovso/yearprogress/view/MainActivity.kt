@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,6 +17,8 @@ import io.github.ovso.yearprogress.R.layout
 import io.github.ovso.yearprogress.R.raw
 import io.github.ovso.yearprogress.R.string
 import io.github.ovso.yearprogress.databinding.ActivityMainBinding
+import io.github.ovso.yearprogress.widget.BottomNav
+import io.github.ovso.yearprogress.widget.EXTRA_NAME_INDEX
 import kotlinx.android.synthetic.main.activity_main.drawer_layout
 import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.app_bar_main.toolbar
@@ -37,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     contentView.viewModel = viewModel
     setupActionBar()
     setupDrawer()
-    setupBottonNavView()
+    setupBottomNavView()
     setupNavigationView()
   }
 
@@ -73,12 +76,12 @@ class MainActivity : AppCompatActivity() {
 
   private fun provideViewModel() = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-  private fun setupBottonNavView() {
+  private fun setupBottomNavView() {
     bottomNavigationView.setOnNavigationItemSelectedListener {
       when (it.itemId) {
-        id.bottom_nav_year -> viewModel.navSelectLiveData.value = 0
-        id.bottom_nav_month -> viewModel.navSelectLiveData.value = 1
-        id.bottom_nav_day -> viewModel.navSelectLiveData.value = 2
+        id.bottom_nav_year -> viewModel.navSelectLiveData.value = BottomNav.YEAR.index
+        id.bottom_nav_month -> viewModel.navSelectLiveData.value = BottomNav.MONTH.index
+        id.bottom_nav_day -> viewModel.navSelectLiveData.value = BottomNav.DAY.index
       }
       true
     }
@@ -86,8 +89,10 @@ class MainActivity : AppCompatActivity() {
     viewModel.navSelectLiveData.observe(this, Observer {
       replaceFragment(it)
     })
-    viewModel.navSelectLiveData.postValue(0)
-
+    val index = intent.getIntExtra(EXTRA_NAME_INDEX, 0)
+    viewModel.navSelectLiveData.postValue(index)
+    val menuItem = bottomNavigationView.menu.get(index)
+    menuItem.setChecked(true)
   }
 
   private fun replaceFragment(position: Int) {
