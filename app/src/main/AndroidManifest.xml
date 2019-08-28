@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.ovso.yearprogress">
+  package="io.github.ovso.yearprogress">
 
   <application
-      android:name=".app.App"
-      android:allowBackup="true"
-      android:fullBackupContent="@xml/my_backup_rules"
-      android:icon="@mipmap/ic_launcher"
-      android:label="@string/app_name"
-      android:roundIcon="@mipmap/ic_launcher_round"
-      android:supportsRtl="true"
-      android:theme="@style/AppTheme">
+    android:name=".app.App"
+    android:allowBackup="true"
+    android:fullBackupContent="@xml/my_backup_rules"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/AppTheme">
     <activity
-        android:name=".view.MainActivity"
-        android:screenOrientation="portrait"
-        android:theme="@style/AppTheme.NoActionBar">
+      android:name=".view.splash.SplashActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/AppTheme.Launcher">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <action android:name="android.intent.action.VIEW" />
@@ -22,40 +22,44 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <activity
+      android:name=".view.main.MainActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/AppTheme.NoActionBar" />
 
-    <receiver android:name=".widget.DayAppWidget"
-        android:label="@string/widget_label_day">
+    <receiver
+      android:name=".widget.DayAppWidget"
+      android:label="@string/widget_label_day">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
       </intent-filter>
 
       <meta-data
-          android:name="android.appwidget.provider"
-          android:resource="@xml/app_widget_info_day" />
+        android:name="android.appwidget.provider"
+        android:resource="@xml/app_widget_info_day" />
     </receiver>
-
-    <receiver android:name=".widget.MonthAppWidget"
-        android:label="@string/widget_label_month">
+    <receiver
+      android:name=".widget.MonthAppWidget"
+      android:label="@string/widget_label_month">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
       </intent-filter>
 
       <meta-data
-          android:name="android.appwidget.provider"
-          android:resource="@xml/app_widget_info_month" />
+        android:name="android.appwidget.provider"
+        android:resource="@xml/app_widget_info_month" />
     </receiver>
-
-    <receiver android:name=".widget.YearAppWidget"
-        android:label="@string/widget_label_year">
+    <receiver
+      android:name=".widget.YearAppWidget"
+      android:label="@string/widget_label_year">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
       </intent-filter>
 
       <meta-data
-          android:name="android.appwidget.provider"
-          android:resource="@xml/app_widget_info_year" />
+        android:name="android.appwidget.provider"
+        android:resource="@xml/app_widget_info_year" />
     </receiver>
-
   </application>
 
 </manifest>

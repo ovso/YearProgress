@@ -9,8 +9,8 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import io.github.ovso.yearprogress.R
-import io.github.ovso.yearprogress.view.MainActivity
-import io.github.ovso.yearprogress.view.PERIOD_PROGRESS
+import io.github.ovso.yearprogress.view.main.MainActivity
+import io.github.ovso.yearprogress.view.main.PERIOD_PROGRESS
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

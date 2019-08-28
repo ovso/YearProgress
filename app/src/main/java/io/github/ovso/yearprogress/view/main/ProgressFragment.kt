@@ -1,4 +1,4 @@
-package io.github.ovso.yearprogress.view
+package io.github.ovso.yearprogress.view.main
 
 import android.os.Bundle
 import android.view.LayoutInflater

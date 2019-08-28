@@ -26,4 +26,8 @@
     <item name="android:textColorSecondary">@android:color/black</item>
   </style>
 
+  <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar">
+    <item name="android:windowBackground">@drawable/splash_background</item>
+  </style>
+
 </resources>
