@@ -23,6 +23,7 @@ android {
     applicationId config.app_id
     minSdkVersion config.min_sdk
     targetSdkVersion config.target_sdk
+    multiDexEnabled true
     versionCode config.version_major * 1000000 + config.version_minor * 1000 + config.version_patch
     versionName "${config.version_major}.${config.version_minor}.${config.version_patch}"
     vectorDrawables.useSupportLibrary true
