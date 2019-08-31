@@ -79,6 +79,7 @@ dependencies {
   implementation deps.androidx.legacy_support_v4
   implementation deps.androidx.lifecycle_extensions
   implementation deps.androidx.lifecycle_viewmodel_ktx
+  implementation deps.firebase.ads
 
   implementation deps.jetbrains.anko
 
