@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1060118017933",
+    "firebase_url": "https://yearprogress-e1ab4.firebaseio.com",
+    "project_id": "yearprogress-e1ab4",
+    "storage_bucket": "yearprogress-e1ab4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060118017933:android:02dc1f6578c9177c",
+        "android_client_info": {
+          "package_name": "io.github.ovso.yearprogress"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060118017933-102u0enrulc2jk3kpl0j2a6hifbr6av0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmqczS7WBcgShguDZOVuu70PdDG-zFkUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060118017933-102u0enrulc2jk3kpl0j2a6hifbr6av0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
