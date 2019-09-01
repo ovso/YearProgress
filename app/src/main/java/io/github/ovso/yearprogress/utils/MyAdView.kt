@@ -9,7 +9,7 @@ import com.google.android.gms.ads.InterstitialAd
 object MyAdView {
   fun getAdmobBannerView(context: Context): AdView {
     val adView = AdView(context)
-    adView.adSize = AdSize.FULL_BANNER
+    adView.adSize = AdSize.SMART_BANNER
     adView.adUnitId = Ads.ADMOB_BANNER_UNIT_ID.value
     val adRequest = AdRequest.Builder()
       .build()
