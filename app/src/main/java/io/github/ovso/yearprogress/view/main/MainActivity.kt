@@ -17,12 +17,14 @@ import io.github.ovso.yearprogress.R.layout
 import io.github.ovso.yearprogress.R.raw
 import io.github.ovso.yearprogress.R.string
 import io.github.ovso.yearprogress.databinding.ActivityMainBinding
+import io.github.ovso.yearprogress.utils.MyAdView
 import io.github.ovso.yearprogress.widget.BottomNav
 import io.github.ovso.yearprogress.widget.EXTRA_NAME_INDEX
 import kotlinx.android.synthetic.main.activity_main.drawer_layout
 import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import kotlinx.android.synthetic.main.content_main.bottomNavigationView
+import kotlinx.android.synthetic.main.content_main.fl_ads_container
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -42,6 +44,11 @@ class MainActivity : AppCompatActivity() {
     setupDrawer()
     setupBottomNavView()
     setupNavigationView()
+    setupAds()
+  }
+
+  private fun setupAds() {
+    fl_ads_container.addView(MyAdView.getAdmobBannerView(this))
   }
 
   private fun setupNavigationView() {
