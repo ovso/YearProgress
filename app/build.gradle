@@ -3,7 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-def keystorePropertiesFile = rootProject.file("../jks/all/keystore.properties")
+apply from: '../scripts/ktlint.gradle'
+
+def keystorePropertiesFile = rootProject.file("../jks/keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
@@ -32,9 +34,8 @@ android {
   buildTypes {
     release {
 
-      minifyEnabled true
-      useProguard true
-      shrinkResources true
+      minifyEnabled false
+      shrinkResources false
 
       proguardFile getDefaultProguardFile('proguard-android.txt')
       proguardFile 'proguard-rules.pro'
