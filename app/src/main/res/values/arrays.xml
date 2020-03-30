@@ -15,6 +15,7 @@
     <item>#373737</item>
     <item>#1b1b1b</item>
     <item>#000000</item>
+    <item>#000000</item>
   </string-array>
   <string-array name="percent_colors2">
     <item>#707070</item>
@@ -25,6 +26,7 @@
     <item>#373737</item>
     <item>#1b1b1b</item>
     <item>#1b1b1b</item>
+    <item>#000000</item>
     <item>#000000</item>
     <item>#000000</item>
   </string-array>
