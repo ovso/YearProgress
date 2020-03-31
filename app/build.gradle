@@ -85,9 +85,10 @@ dependencies {
 
   implementation deps.jetbrains.anko
 
-  implementation deps.rx.rxjava2
-  implementation deps.rx.rxandroid
-  implementation deps.rx.rxkotlin2
+  implementation deps.rx.values()
+//  implementation deps.rx.rxjava2
+//  implementation deps.rx.rxandroid
+//  implementation deps.rx.rxkotlin2
 
   implementation deps.timber
   implementation deps.licensedialog
