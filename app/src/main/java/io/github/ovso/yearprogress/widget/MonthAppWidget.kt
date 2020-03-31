@@ -110,7 +110,7 @@ class MonthAppWidget : AppWidgetProvider() {
       appWidgetId: Int,
       progress: Int
     ) {
-      Timber.d("updateAppWidget updateAppWidget progress = $progress")
+      //Timber.d("updateAppWidget updateAppWidget progress = $progress")
       val widgetText = "$progress%"
       // Construct the RemoteViews object
       val views = RemoteViews(context.packageName, R.layout.year_app_widget)
