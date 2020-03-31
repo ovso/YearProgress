@@ -1,8 +1,8 @@
 package io.github.ovso.yearprogress.view.splash
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import io.github.ovso.yearprogress.view.main.MainActivity
 
 class SplashActivity : AppCompatActivity() {

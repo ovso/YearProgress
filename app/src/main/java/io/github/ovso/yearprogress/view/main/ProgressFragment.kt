@@ -23,7 +23,8 @@ class ProgressFragment : Fragment() {
   private lateinit var viewModel: ProgressViewModel
 
   override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
+    inflater: LayoutInflater,
+    container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
     viewModel = provideViewModel()
@@ -49,5 +50,4 @@ class ProgressFragment : Fragment() {
           arguments?.getInt("position")!!
         ) as T
     }).get(ProgressViewModel::class.java)
-
 }

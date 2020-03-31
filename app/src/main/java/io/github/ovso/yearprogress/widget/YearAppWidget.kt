@@ -16,14 +16,14 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.atomic.AtomicInteger
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
-import java.util.concurrent.TimeUnit.MILLISECONDS
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Implementation of App Widget functionality.
@@ -90,7 +90,6 @@ class YearAppWidget : AppWidgetProvider() {
               }
             }
         )
-
       } else if (it == ACTION_LAUNCHER_MAIN) {
         context!!.startActivity(
           Intent(context, MainActivity::class.java).apply {
@@ -103,17 +102,18 @@ class YearAppWidget : AppWidgetProvider() {
         )
       }
     }
-
   }
 
   companion object {
 
     internal fun updateAppWidget(
-      context: Context, appWidgetManager: AppWidgetManager,
-      appWidgetId: Int, progress: Int
+      context: Context,
+      appWidgetManager: AppWidgetManager,
+      appWidgetId: Int,
+      progress: Int
     ) {
       Timber.d("updateAppWidget updateAppWidget progress = $progress")
-      val widgetText = "${progress}%"
+      val widgetText = "$progress%"
       // Construct the RemoteViews object
       val views = RemoteViews(context.packageName, R.layout.year_app_widget)
       val title = context.resources.getStringArray(array.fragment_titles)[0]

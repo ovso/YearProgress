@@ -1,6 +1,5 @@
 object InitializeLibs {
 
-  fun timber(): Unit {
-
+  fun timber() {
   }
 }

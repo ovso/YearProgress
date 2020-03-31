@@ -1,9 +1,7 @@
 package io.github.ovso.yearprogress
 
-import org.junit.Test
-
 import org.junit.Assert.*
-import java.util.function.Consumer
+import org.junit.Test
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -13,7 +11,7 @@ import java.util.function.Consumer
 class ExampleUnitTest {
   @Test
   fun addition_isCorrect() {
-    //assertEquals(4, 2 + 2)
+    // assertEquals(4, 2 + 2)
     val i = 86400000
     val i1 = i / 1000 / 60 / 60
     println("i1 = $i1")

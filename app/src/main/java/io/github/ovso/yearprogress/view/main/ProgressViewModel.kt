@@ -9,14 +9,14 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.atomic.AtomicInteger
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
-import java.util.concurrent.TimeUnit.MILLISECONDS
-import java.util.concurrent.atomic.AtomicInteger
 
 const val PERIOD_PROGRESS = 25L
 
@@ -37,8 +37,6 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
       2 -> setupPercent(getDayPer())
     }
   }
-
-
 
   private fun setupPercent(percent: Int) {
     Timber.d("setupPercent($percent)")

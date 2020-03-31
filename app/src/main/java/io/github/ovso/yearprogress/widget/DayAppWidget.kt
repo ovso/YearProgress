@@ -16,13 +16,13 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.Calendar
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.atomic.AtomicInteger
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import timber.log.Timber
-import java.util.Calendar
-import java.util.concurrent.TimeUnit.MILLISECONDS
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Implementation of App Widget functionality.
@@ -81,9 +81,10 @@ class DayAppWidget : AppWidgetProvider() {
   companion object {
 
     internal fun updateAppWidget(
-      context: Context, appWidgetManager: AppWidgetManager,
+      context: Context,
+      appWidgetManager: AppWidgetManager,
       appWidgetId: Int,
-      progress:Int
+      progress: Int
     ) {
       Timber.d("updateAppWidget updateAppWidget progress = $progress")
 //      val widgetText = context.getString(R.string.appwidget_text)
@@ -92,7 +93,7 @@ class DayAppWidget : AppWidgetProvider() {
       val views = RemoteViews(context.packageName, R.layout.year_app_widget)
 
       val title = context.resources.getStringArray(R.array.fragment_titles)[2]
-      views.setTextViewText(R.id.tv_widget_title, title);
+      views.setTextViewText(R.id.tv_widget_title, title)
       views.setTextViewText(R.id.tv_widget_percent, widgetText)
       views.setProgressBar(R.id.progress_widget, 100, progress, false)
       setClickViews(context, views)
@@ -126,7 +127,6 @@ class DayAppWidget : AppWidgetProvider() {
           PendingIntent.FLAG_UPDATE_CURRENT
         )
       )
-
     }
 
     private fun getDayPer() =
@@ -160,7 +160,7 @@ class DayAppWidget : AppWidgetProvider() {
           manager,
           manager.getAppWidgetIds(ComponentName(context, DayAppWidget::class.java))
         )
-      } else       if (it == ACTION_REFRESH) {
+      } else if (it == ACTION_REFRESH) {
         Timber.d("OJH Year onReceive action_refresh")
         progressAtomic.set(0)
         val manager = AppWidgetManager.getInstance(context)
@@ -184,7 +184,6 @@ class DayAppWidget : AppWidgetProvider() {
               }
             }
         )
-
       } else if (it == ACTION_LAUNCHER_MAIN) {
         context!!.startActivity(
           Intent(context, MainActivity::class.java).apply {
@@ -196,10 +195,8 @@ class DayAppWidget : AppWidgetProvider() {
           }
         )
       }
-
     }
   }
-
 }
 
 // https://medium.com/android-bits/android-widgets-ad3d166458d3

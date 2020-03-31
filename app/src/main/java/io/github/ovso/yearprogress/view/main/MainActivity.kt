@@ -140,7 +140,6 @@ class MainActivity : AppCompatActivity() {
     } catch (e: ActivityNotFoundException) {
       Timber.e(e)
     }
-
   }
 
   private fun showLicenseDialog() {
