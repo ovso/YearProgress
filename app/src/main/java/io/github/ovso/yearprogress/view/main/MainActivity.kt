@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     val index = intent.getIntExtra(EXTRA_NAME_INDEX, 0)
     viewModel.navSelectLiveData.postValue(index)
-    val menuItem = bottomNavigationView.menu.get(index)
+    val menuItem = bottomNavigationView.menu[index]
     menuItem.isChecked = true
   }
 

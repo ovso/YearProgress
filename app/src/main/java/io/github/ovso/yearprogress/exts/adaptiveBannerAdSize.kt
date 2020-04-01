@@ -8,7 +8,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
-import io.github.ovso.yearprogress.Ads
 
 private fun Activity.adaptiveBannerAdSize(): AdSize {
   val display = windowManager.defaultDisplay
