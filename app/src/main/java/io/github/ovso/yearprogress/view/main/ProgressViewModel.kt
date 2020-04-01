@@ -20,7 +20,7 @@ import timber.log.Timber
 
 const val PERIOD_PROGRESS = 25L
 
-class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
+class ProgressViewModel(val context: Context, private val position: Int) : ViewModel() {
 
   val progressObField = ObservableField<Int>()
   val percentObField = ObservableField<String>()
@@ -31,6 +31,7 @@ class ProgressViewModel(val context: Context, val position: Int) : ViewModel() {
   fun getTitle(): String = context.resources.getStringArray(array.fragment_titles)[position]
 
   init {
+
     when (position) {
       0 -> setupPercent(getYearPer())
       1 -> setupPercent(getMonthPer())

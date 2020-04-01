@@ -11,22 +11,18 @@ import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.ads.AdListener
 import de.psdev.licensesdialog.LicensesDialog
 import io.github.ovso.yearprogress.Ads
-import io.github.ovso.yearprogress.R.id
-import io.github.ovso.yearprogress.R.layout
-import io.github.ovso.yearprogress.R.raw
-import io.github.ovso.yearprogress.R.string
+import io.github.ovso.yearprogress.R.*
 import io.github.ovso.yearprogress.databinding.ActivityMainBinding
 import io.github.ovso.yearprogress.exts.loadAdaptiveBanner
-import io.github.ovso.yearprogress.utils.MyAdView
+import io.github.ovso.yearprogress.exts.loadInterstitial
 import io.github.ovso.yearprogress.widget.BottomNav
 import io.github.ovso.yearprogress.widget.EXTRA_NAME_INDEX
-import kotlinx.android.synthetic.main.activity_main.drawer_layout
-import kotlinx.android.synthetic.main.activity_main.nav_view
-import kotlinx.android.synthetic.main.app_bar_main.toolbar
-import kotlinx.android.synthetic.main.content_main.bottomNavigationView
-import kotlinx.android.synthetic.main.content_main.fl_ads_container
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -95,9 +91,20 @@ class MainActivity : AppCompatActivity() {
       true
     }
 
-    viewModel.navSelectLiveData.observe(this, Observer {
-      replaceFragment(it)
+    viewModel.navSelectLiveData.observe(this, Observer { position ->
+      val loadInterstitial = loadInterstitial(Ads.INTERSTITIAL_UNIT_ID)
+      loadInterstitial.adListener = object : AdListener() {
+        override fun onAdClosed() {
+          replaceFragment(position)
+        }
+
+        override fun onAdLoaded() {
+          super.onAdLoaded()
+          loadInterstitial.show()
+        }
+      }
     })
+
     val index = intent.getIntExtra(EXTRA_NAME_INDEX, 0)
     viewModel.navSelectLiveData.postValue(index)
     val menuItem = bottomNavigationView.menu.get(index)

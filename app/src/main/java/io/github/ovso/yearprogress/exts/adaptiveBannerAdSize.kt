@@ -86,9 +86,9 @@ fun Fragment.loadAdaptiveBanner(container: ViewGroup, unitId: String) {
   load()
 }
 
-fun Activity.loadInterstitial(): InterstitialAd {
+fun Activity.loadInterstitial(unitId: String): InterstitialAd {
   return InterstitialAd(applicationContext).apply {
-    adUnitId = Ads.INTERSTITIAL_UNIT_ID
+    adUnitId = unitId
     loadAd(AdRequest.Builder().build())
   }
 }
