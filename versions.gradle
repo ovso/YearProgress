@@ -148,7 +148,7 @@ config.app_id = 'io.github.ovso.yearprogress'
 config.min_sdk = 21
 config.target_sdk = 29
 config.version_major = 1
-config.version_minor = 0
+config.version_minor = 1
 config.version_patch = 0
 
 ext.config = config
