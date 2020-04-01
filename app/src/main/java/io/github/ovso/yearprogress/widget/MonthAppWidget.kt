@@ -110,7 +110,7 @@ class MonthAppWidget : AppWidgetProvider() {
       appWidgetId: Int,
       progress: Int
     ) {
-      //Timber.d("updateAppWidget updateAppWidget progress = $progress")
+      // Timber.d("updateAppWidget updateAppWidget progress = $progress")
       val widgetText = "$progress%"
       // Construct the RemoteViews object
       val views = RemoteViews(context.packageName, R.layout.year_app_widget)
@@ -150,8 +150,8 @@ class MonthAppWidget : AppWidgetProvider() {
     }
 
     private fun getMonthPer(): Int {
-      val nowDay = MonthAppWidget.hereAndNow().dayOfMonth
-      val lastDay = MonthAppWidget.hereAndNow().month.maxLength()
+      val nowDay = hereAndNow().dayOfMonth
+      val lastDay = hereAndNow().month.maxLength()
       return (nowDay.toDouble() / lastDay.toDouble() * 100).toInt()
     }
 
