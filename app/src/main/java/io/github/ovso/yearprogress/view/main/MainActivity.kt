@@ -12,11 +12,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import de.psdev.licensesdialog.LicensesDialog
+import io.github.ovso.yearprogress.Ads
 import io.github.ovso.yearprogress.R.id
 import io.github.ovso.yearprogress.R.layout
 import io.github.ovso.yearprogress.R.raw
 import io.github.ovso.yearprogress.R.string
 import io.github.ovso.yearprogress.databinding.ActivityMainBinding
+import io.github.ovso.yearprogress.exts.loadAdaptiveBanner
 import io.github.ovso.yearprogress.utils.MyAdView
 import io.github.ovso.yearprogress.widget.BottomNav
 import io.github.ovso.yearprogress.widget.EXTRA_NAME_INDEX
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun setupAds() {
-    fl_ads_container.addView(MyAdView.getAdmobBannerView(this))
+    loadAdaptiveBanner(fl_ads_container, Ads.BANNER_UNIT_ID)
   }
 
   private fun setupNavigationView() {
