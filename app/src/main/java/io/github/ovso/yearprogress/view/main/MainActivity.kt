@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.InterstitialAd
 import de.psdev.licensesdialog.LicensesDialog
 import io.github.ovso.yearprogress.Ads
 import io.github.ovso.yearprogress.R.*
@@ -28,6 +29,7 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity() {
 
   private lateinit var viewModel: MainViewModel
+  private lateinit var interstitialAd: InterstitialAd
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun setupAds() {
     loadAdaptiveBanner(fl_ads_container, Ads.BANNER_UNIT_ID)
+    interstitialAd = loadInterstitial(Ads.INTERSTITIAL_UNIT_ID)
   }
 
   private fun setupNavigationView() {
@@ -92,17 +95,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     viewModel.navSelectLiveData.observe(this, Observer { position ->
-      val loadInterstitial = loadInterstitial(Ads.INTERSTITIAL_UNIT_ID)
-      loadInterstitial.adListener = object : AdListener() {
+
+      interstitialAd.adListener = object : AdListener() {
         override fun onAdClosed() {
           replaceFragment(position)
         }
 
-        override fun onAdLoaded() {
-          super.onAdLoaded()
-          loadInterstitial.show()
+        override fun onAdFailedToLoad(p0: Int) {
+          super.onAdFailedToLoad(p0)
+          replaceFragment(position)
         }
       }
+
+      if (interstitialAd.isLoaded) {
+        interstitialAd.show()
+      } else {
+        replaceFragment(position)
+      }
+
     })
 
     val index = intent.getIntExtra(EXTRA_NAME_INDEX, 0)
